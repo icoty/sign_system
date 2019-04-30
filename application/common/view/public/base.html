@@ -1,0 +1,69 @@
+<!doctype html>
+<html class="no-js" lang="">
+
+{include file='common@public:header' /}
+<!--其他样式-->
+{block name="styles"}{/block}
+<!--其他样式-->
+
+<body>
+<!-- 左边栏开始 -->
+{include file="common@public:left_nav" /}
+<!-- 左边栏结束 -->
+
+<!-- Right Panel -->
+<div id="right-panel" class="right-panel">
+    <!-- 标题栏开始 -->
+    {include file="common@public:head_nav" /}
+    <!-- 标题栏结束 -->
+
+    <!-- Content -->
+    {block name="main-content"}{/block}
+    <!-- /.content -->
+    <div class="clearfix"></div>
+    <!-- 页脚开始 -->
+    {include file="common@public:footer" /}
+    <!-- 页脚结束 -->
+</div>
+<!-- /#right-panel -->
+
+<!-- 公用js -->
+<script src="__STATIC__/assets/js/vendor/jquery-2.1.4.min.js"></script>
+<script src="__STATIC__/assets/js/popper.min.js"></script>
+<script src="__STATIC__/assets/js/bootstrap.min.js"></script>
+<script src="__STATIC__/assets/js/jquery.matchHeight.min.js"></script>
+<script src="__STATIC__/assets/js/main.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/datatables.min.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/dataTables.bootstrap.min.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/dataTables.buttons.min.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/buttons.bootstrap.min.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/jszip.min.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/vfs_fonts.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/buttons.html5.min.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/buttons.print.min.js"></script>
+<script src="__STATIC__/assets/js/lib/data-table/buttons.colVis.min.js"></script>
+<script src="__STATIC__/assets/js/init/datatables-init.js"></script>
+<!-- 公用js -->
+<script type="text/javascript">
+    /*    if(localStorage.getItem("menu")===null){
+            localStorage.setItem("menu",0);
+        }
+        $('.menu-item-has-children').eq(parseInt(localStorage.getItem("menu"))).addClass("active").siblings().removeClass("active");
+        $('.menu-item-has-children').each(function (index,val) {
+            var item = $(this);
+            item.click(function () {
+                localStorage.setItem("menu",index);
+                item.addClass("active").siblings().removeClass("active");
+            });
+        });*/
+</script>
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#bootstrap-data-table-export').DataTable();
+    } );
+</script>
+<!-- 此页相关的js -->
+{block name="scripts"}{/block}
+<!-- 此页相关的js -->
+</body>
+</html>

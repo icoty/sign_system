@@ -1,0 +1,181 @@
+{extend name="common@public/base" /}
+{block name="main-content"}
+<!-- Content -->
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="box-title">
+                            <button type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addLabel">添加标签</button>
+                        </h4>
+                    </div>
+                    <div class="card-body--">
+                        <div class="table-stats">
+                            <table id="bootstrap-data-table" class="table">
+                                <thead>
+                                <tr>
+                                    <th class="serial">序号</th>
+                                    <th>标签名称</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name='info' id='list'}
+                                <tr data-id={$list.l_id}>
+                                    <td class="serial" >{$i}.</td>
+                                    <td>  <span class="product">{$list.l_name}</span> </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal" data-target="#editLabel">
+                                            <i class="fa fa-magic"></i>&nbsp;编辑
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm mb-1" data-toggle="modal" data-target="#delLabel">
+                                            <i class="fa fa-exclamation"></i>&nbsp;删除
+                                        </button>
+                                    </td>
+                                </tr>
+                                {/volist}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--添加标签信息-->
+            <form action="addLabel" method="post">
+                <div class="modal fade" id="addLabel" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addmodalLabel">添加标签</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_l_name" name="l_name" placeholder="标签名称" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!--编辑标签信息-->
+            <form action="editLabel" method="post">
+                <div class="modal fade" id="editLabel" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editmodalLabel">编辑标签信息</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="edit_l_id" name="l_id">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_l_name" name="l_name" placeholder="标签" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!--删除标签信息-->
+            <form action="delLabel" method="post">
+                <div class="modal fade" id="delLabel" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="delmodalLabel">删除标签信息</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="del_l_id" name="l_id">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_l_name" name="l_name" placeholder="标签名称" class="form-control" readonly="true">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+    <!-- .animated -->
+</div>
+<!-- /.content -->
+{/block}
+
+{block name="scripts"}
+<!--编辑标签信息-->
+<script type="text/javascript">
+    $('#editLabel').on('show.bs.modal',function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        //var modalId = btnThis.data('id');   //解析出data-id的内容
+        var l_id = btnThis.closest('tr').data('id');
+        var l_name = btnThis.closest('tr').find('td').eq(1).text();
+        modal.find('#edit_l_name').val(l_name);
+        modal.find('#edit_l_id').val(l_id);
+
+    });
+</script>
+
+<!--删除标签-->
+<script type="text/javascript">
+    $('#delLabel').on('show.bs.modal',function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        //var modalId = btnThis.data('id');   //解析出data-id的内容
+        var l_id = btnThis.closest('tr').data('id');
+        var l_name = btnThis.closest('tr').find('td').eq(1).text();
+        modal.find('#del_l_name').val(l_name);
+        modal.find('#del_l_id').val(l_id);
+
+    });
+</script>
+{/block}

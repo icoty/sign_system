@@ -1,0 +1,108 @@
+/* CSS Document */
+
+BODY {
+    background-color: #ccdbf0;
+}
+
+
+.topBar {
+    background-image: url(../images/topBarC.gif);
+    border: 1px solid #99BBE8;
+}
+
+.topBar SPAN {
+    color: #15428B;
+}
+
+
+/*main*/
+.main {
+    border: 1px solid #99BBE8;
+}
+
+
+.lsArrow{
+background-image:url(../images/tool-sprites.gif); background-position:0px 180px;}
+.lsArrow:hover{
+background-image:url(../images/tool-sprites.gif); background-position:15px 180px;}
+.lArrow{
+background-image:url(../images/tool-sprites.gif); background-position:0px 255px;}
+.lArrow:hover{
+background-image:url(../images/tool-sprites.gif); background-position:15px 255px;}
+.rsArrow{
+background-image:url(../images/tool-sprites.gif); background-position:0px 195px;}
+.rsArrow:hover{
+background-image:url(../images/tool-sprites.gif); background-position:15px 195px;}
+.rArrow{
+background-image:url(../images/tool-sprites.gif); background-position:0px 240px;}
+.rArrow:hover{
+background-image:url(../images/tool-sprites.gif); background-position:15px 240px;}
+
+
+.cadTable thead tr{
+background-color:#99BBE8;}
+.cadTable tbody td{
+border:1px solid #99BBE8;}
+
+
+
+/*calendar*/
+.calTit{
+background-image:url(../images/calTit.jpg);}
+.calWeekTit{
+background-color:#99BBE8; color:#15428B;}
+.calTit FONT{
+color:#15428B;}
+table.biao td {
+border: 1px solid #99BBE8;}
+.pop{
+border:1px solid #99BBE8;}
+#teshu{
+background-color:#e6eef7; background-image:url(../images/topBarC.gif);}
+.jinri {
+background: #cfdff0;}
+.workday {
+background:url(../images/workday.png) ;
+background-size:117px 54px;
+}
+.holiday {
+background: url(../images/holiday.png);
+background-size:117px 54px;}
+.white {
+background: #FFFFFF;}
+.cal_next{
+color:#15428B;}
+.selday {
+background: #cfdff1;}
+.seldaywork {
+background: #cfdff2;}
+.seldayholiday {
+background: #cfdff3;}
+.button6{
+	width:100%;
+	height:100%;
+	border-radius:3px;
+	border:none;
+	background:#FFFFFF;
+}
+#setworkday>.date,
+#setholiday>.date{
+	display:inline-block;
+	width:85px;
+	height:30px;
+	line-height:30px;
+	border-radius:3px;
+	background:#80ffff;
+	border:1px solid #cfcfcf;
+	padding-left:5px;
+	padding-right:17px;
+	position:relative;
+	margin-left:10px;
+	margin-top:10px;
+}
+#setworkday>.date img,
+#setholiday>.date img{
+	position:absolute;
+	top:8px;
+	right:5px;
+}

@@ -17,13 +17,19 @@ class Allattend extends Common{
     {
         $att = new AttendModel();
         $class = new ClassModel();
+        $admin = new AdminModel();
 
         $info = $att->getAllActAttend();
         foreach ($info as $key => $value) {
             $info[$key]['a_class'] = '';
+            $info[$key]['a_creator_name'] = '';
             $ret = $class->getClassById($info[$key]['a_class_id']);
             if($ret){
                 $info[$key]['a_class'] = $ret['c_name'];  # 祖组织单位名称
+            }
+            $ret = $admin->getNameByNum($info[$key]['a_creator']);
+            if($ret){
+                $info[$key]['a_creator_name'] = $ret['m_name'];  # 祖组织单位名称
             }
         }
         $this->assign('info',$info);
@@ -112,7 +118,9 @@ class Allattend extends Common{
     public function export(){
         //1.从数据库中取出数据
         echo "ddd";
-        $list = Db::name('activity_info')->select();
+        $attend = new AttendModel();
+        // to do
+        $list = $attend->getAllActAttend();
         echo "aaa";
         //2.加载PHPExcle类库
         vendor('PHPExcel.PHPExcel');
@@ -125,24 +133,28 @@ class Allattend extends Common{
             ->setCellValue('A1', '序号')
             ->setCellValue('B1', '活动ID')
             ->setCellValue('C1', '活动名称')
-            ->setCellValue('D1', '创建人')
-            ->setCellValue('E1', '创建人学号')
-            ->setCellValue('F1', '活动地点')
-            ->setCellValue('G1', '活动内容')
-            ->setCellValue('H1', '举办年级')
-            ->setCellValue('I1', '组织单位')
-            ->setCellValue('J1', '活动标签')
-            ->setCellValue('K1', '开始时间')
-            ->setCellValue('L1', '结束时间')
-            ->setCellValue('M1', '创建时间')
-            ->setCellValue('N1', '开始签到')
-            ->setCellValue('O1', '结束签到');
+            ->setCellValue('D1', '活动地点')
+            ->setCellValue('E1', '活动内容')
+            ->setCellValue('F1', '活动标签')
+            ->setCellValue('G1', '创建时间')
+            ->setCellValue('H1', '开始时间')
+            ->setCellValue('I1', '结束时间')
+            ->setCellValue('J1', '举办年级')
+            ->setCellValue('K1', '组织单位')
+            ->setCellValue('L1', '创建人')
+            ->setCellValue('M1', '创建人学号')
+            ->setCellValue('N1', '参加人')
+            ->setCellValue('O1', '参加人学号')
+            ->setCellValue('P1', '开始签到')
+            ->setCellValue('Q1', '结束签到')
+            ->setCellValue('R1', '签到时间');
+
         //设置F列水平居中
         $objPHPExcel->setActiveSheetIndex(0)->getStyle('E')->getAlignment()
             ->setHorizontal(\PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         //设置单元格宽度
         $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('C')->setWidth(15);
-        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('G')->setWidth(30);
+        $objPHPExcel->setActiveSheetIndex(0)->getColumnDimension('E')->setWidth(30);
         //6.循环刚取出来的数组，将数据逐一添加到excel表格。
         echo "aaa";
         $class = new ClassModel();
@@ -151,24 +163,27 @@ class Allattend extends Common{
             $objPHPExcel->getActiveSheet()->setCellValue('A'.($i+2),$i+1);
             $objPHPExcel->getActiveSheet()->setCellValue('B'.($i+2),$list[$i]['a_id']);
             $objPHPExcel->getActiveSheet()->setCellValue('C'.($i+2),$list[$i]['a_name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('D'.($i+2),$admin->getNameByNum($list[$i]['a_creator'])['m_name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.($i+2),$list[$i]['a_creator']);
-            $objPHPExcel->getActiveSheet()->setCellValue('F'.($i+2),$list[$i]['a_place']);
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.($i+2),$list[$i]['a_content']);
-            $objPHPExcel->getActiveSheet()->setCellValue('H'.($i+2),$list[$i]['a_grade']);
-            $objPHPExcel->getActiveSheet()->setCellValue('I'.($i+2),$class->getClassById($list[$i]['a_class_id'])['c_name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('J'.($i+2),$list[$i]['a_label']);
-            $objPHPExcel->getActiveSheet()->setCellValue('K'.($i+2),$list[$i]['a_start_time']);
-            $objPHPExcel->getActiveSheet()->setCellValue('L'.($i+2),$list[$i]['a_end_time']);
-            $objPHPExcel->getActiveSheet()->setCellValue('M'.($i+2),$list[$i]['a_create_time']);
-            $objPHPExcel->getActiveSheet()->setCellValue('N'.($i+2),$list[$i]['a_start_sign']);
-            $objPHPExcel->getActiveSheet()->setCellValue('O'.($i+2),$list[$i]['a_end_sign']);
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.($i+2),$list[$i]['a_place']);
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.($i+2),$list[$i]['a_content']);
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.($i+2),$list[$i]['a_label']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.($i+2),$list[$i]['a_create_time']);
+            $objPHPExcel->getActiveSheet()->setCellValue('H'.($i+2),$list[$i]['a_start_time']);
+            $objPHPExcel->getActiveSheet()->setCellValue('I'.($i+2),$list[$i]['a_end_time']);
+            $objPHPExcel->getActiveSheet()->setCellValue('J'.($i+2),$list[$i]['a_grade']);
+            $objPHPExcel->getActiveSheet()->setCellValue('K'.($i+2),$class->getClassById($list[$i]['a_class_id'])['c_name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('L'.($i+2),$admin->getNameByNum($list[$i]['a_creator'])['m_name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('M'.($i+2),$list[$i]['a_creator']);
+            $objPHPExcel->getActiveSheet()->setCellValue('N'.($i+2),$list[$i]['a2s_stu_name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('O'.($i+2),$list[$i]['a2s_stu_num']);
+            $objPHPExcel->getActiveSheet()->setCellValue('P'.($i+2),$list[$i]['a_start_sign']);
+            $objPHPExcel->getActiveSheet()->setCellValue('Q'.($i+2),$list[$i]['a_end_sign']);
+            $objPHPExcel->getActiveSheet()->setCellValue('R'.($i+2),$list[$i]['a2s_sign_time']);
 
         }
         //7.设置保存的Excel表格名称
-        $filename = '活动表'.date('ymd',time()).'.xls';
+        $filename = '活动出席表'.date('ymd',time()).'.xls';
         //8.设置当前激活的sheet表格名称；
-        $objPHPExcel->getActiveSheet()->setTitle('活动表');
+        $objPHPExcel->getActiveSheet()->setTitle('活动出席表');
         //9.设置浏览器窗口下载表格
         header("Content-Type: application/force-download");
         header("Content-Type: application/octet-stream");

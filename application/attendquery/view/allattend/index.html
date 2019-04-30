@@ -8,8 +8,8 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="box-title">
-                            <input type="button" style="height:36px;" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Allattend/export\')}'" value="导出Excel">
-                            <button id="batchShow" type="submit" class="btn btn-success btn-sm" style="height:36px;" >Excel导入格式: 活动ID, 学号, 姓名, 签到时间</button>
+                            <input type="button" style="height:36px;" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Allattend/export\')}'" value="导出所有到Excel">
+                            <button id="batchShow" type="submit" class="btn btn-success btn-sm" style="height:36px;" >Excel导入格式: 活动ID, 姓名, 学号, 签到时间</button>
                             <form id="batchAdd" action="batchAddByExcel" enctype="multipart/form-data" method="post" style="display: none">
                                 <input type="file" class="btn btn-success btn-sm" name="file"/>
                                 <input class="btn btn-success btn-sm" type="submit" style="height:36px;" value="上传"/>
@@ -31,6 +31,8 @@
                                     <th>签到时间</th>
                                     <th>年级</th>
                                     <th>组织单位</th>
+                                    <th>标签</th>
+                                    <th>创建者</th>
                                     <th>操作</th>
                                 </tr>
                                 </thead>
@@ -46,6 +48,8 @@
                                     <td><span class="product">{$list.a2s_sign_time}</span></td>
                                     <td data-id="{$list.a_grade}"><span class="product">{$list.a_grade}</span></td>
                                     <td data-id={$list.a_class}><span class="product">{$list.a_class}</span></td>
+                                    <td><span class="product">{$list.a_label}</span></td>
+                                    <td><span class="product">{$list.a_creator_name}</span></td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal"
                                                 data-target="#editAttend">
@@ -148,6 +152,22 @@
                                         <input type="text" id="edit_a_class" name="a_class" placeholder="组织单位" class="form-control" disabled="disabled">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_label" name="a_label" placeholder="标签" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_creator_name" name="a_creator_name" placeholder="创建人" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
                                 </p>
                             </div>
                             <div class="modal-footer">
@@ -241,6 +261,22 @@
                                         <input type="text" id="del_a_class" name="a_class" placeholder="组织单位" class="form-control" disabled="disabled">
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_label" name="a_label" placeholder="标签" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_creator_name" name="a_creator_name" placeholder="创建人" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
                                 </p>
                             </div>
                             <div class="modal-footer">
@@ -274,6 +310,8 @@
         var a2s_sign_time = btnThis.closest('tr').find('td').eq(5).text();
         var a_grade = btnThis.closest('tr').find('td').eq(6).data('id');
         var a_class = btnThis.closest('tr').find('td').eq(7).data('id');
+        var a_label = btnThis.closest('tr').find('td').eq(8).text();
+        var a_creator_name = btnThis.closest('tr').find('td').eq(9).text();
         modal.find('#edit_a2s_act_id').val(a2s_act_id);
         modal.find('#edit_a_name').val(name);
         modal.find('#edit_a2s_stu_name').val(a2s_stu_name);
@@ -282,6 +320,8 @@
         modal.find('#edit_a_grade').val(a_grade);
         modal.find('#edit_a_class').val(a_class);
         modal.find('#edit_a2s_id').val(a2s_id);
+        modal.find('#edit_a_label').val(a_label);
+        modal.find('#edit_a_creator_name').val(a_creator_name);
 
     });
 </script>
@@ -300,6 +340,8 @@
         var a2s_sign_time = btnThis.closest('tr').find('td').eq(5).text();
         var a_grade = btnThis.closest('tr').find('td').eq(6).data('id');
         var a_class = btnThis.closest('tr').find('td').eq(7).data('id');
+        var a_label = btnThis.closest('tr').find('td').eq(8).text();
+        var a_creator_name = btnThis.closest('tr').find('td').eq(9).text();
         modal.find('#del_a2s_act_id').val(a2s_act_id);
         modal.find('#del_a_name').val(name);
         modal.find('#del_a2s_stu_name').val(a2s_stu_name);
@@ -308,7 +350,8 @@
         modal.find('#del_a_grade').val(a_grade);
         modal.find('#del_a_class').val(a_class);
         modal.find('#del_a2s_id').val(a2s_id);
-
+        modal.find('#del_a_label').val(a_label);
+        modal.find('#del_a_creator_name').val(a_creator_name);
     });
 </script>
 
@@ -319,7 +362,7 @@
             $('#batchShow').text('取消');
             form.style.display = 'inline';
         } else {
-            $('#batchShow').text('Excel导入格式: 活动ID, 学号, 姓名, 签到时间');
+            $('#batchShow').text('Excel导入格式: 活动ID, 姓名, 学号, 签到时间');
             form.style.display = 'none';
         }
     });

@@ -1,0 +1,358 @@
+{extend name="common@public/base" /}
+{block name="main-content"}
+<!-- Content -->
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="box-title">
+                            <button type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addAdmin">添加管理员</button>
+                        </h4>
+                    </div>
+                    <div class="card-body--">
+                        <div class="table-stats">
+                            <table id="bootstrap-data-table" class="table">
+                                <thead>
+                                <tr>
+                                    <th class="serial">序号</th>
+                                    <th>学号</th>
+                                    <th>姓名</th>
+                                    <th>班级</th>
+                                    <th>年级</th>
+                                    <th>手机号</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name='info' id='list'}
+                                <tr data-id={$list.m_id}>
+                                    <td class="serial" >{$i}.</td>
+                                    <td>  <span class="product">{$list.m_id}</span> </td>
+                                    <td>  <span class="product">{$list.m_name}</span> </td>
+                                    <td>  <span class="product">{$list.m_class}</span> </td>
+                                    <td>  <span class="product">{$list.m_grade}</span> </td>
+                                    <td>  <span class="product">{$list.m_telephone}</span> </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal" data-target="#editAdmin">
+                                            <i class="fa fa-magic"></i>&nbsp;编辑
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm mb-1" data-toggle="modal" data-target="#delAdmin">
+                                            <i class="fa fa-exclamation"></i>&nbsp;删除
+                                        </button>
+                                    </td>
+                                </tr>
+                                {/volist}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--添加管理员-->
+            <form action="addAdmin" method="post">
+                <div class="modal fade" id="addAdmin" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addmodalLabel">添加管理员</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_m_id" name="m_id" placeholder="学号" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-credit-card"></i>
+                                        </div>
+                                        <input type="text" id="add_m_name" name="m_name" placeholder="姓名" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select name="add_m_class" id="m_class" class="form-control">
+                                            {volist name='classinfo' id='list'}
+                                            <option value={$list.c_id}>{$list.c_name}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select name="add_m_grade" id="m_grade" class="form-control">
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!--编辑管理员-->
+            <form action="editAdmin" method="post">
+                <div class="modal fade" id="editAdmin" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editmodalLabel">编辑管理员</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="edit_m_id" name="m_id">
+                                <p>  <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                    <input type="text" id="add_m_id" name="m_id" placeholder="学号" class="form-control">
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-credit-card"></i>
+                                        </div>
+                                        <input type="text" id="add_m_name" name="m_name" placeholder="姓名" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select name="add_m_class" id="m_class" class="form-control">
+                                            {volist name='classinfo' id='list'}
+                                            <option value={$list.c_id}>{$list.c_name}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select name="add_m_grade" id="m_grade" class="form-control">
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!--删除管理员-->
+            <form action="delAdmin" method="post">
+                <div class="modal fade" id="delAdmin" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="delmodalLabel">删除管理员</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="del_m_id" name="m_id">
+                                <p>  <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-user"></i>
+                                    </div>
+                                    <input type="text" id="del_m_id" name="m_id" placeholder="学号" class="form-control">
+                                </div>
+                            </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-credit-card"></i>
+                                        </div>
+                                        <input type="text" id="add_m_name" name="m_name" placeholder="姓名" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select name="add_m_class" id="m_class" class="form-control">
+                                            {volist name='classinfo' id='list'}
+                                            <option value={$list.c_id}>{$list.c_name}</option>
+                                            {/volist}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select name="add_m_grade" id="m_grade" class="form-control">
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="密码:6~16位字符,只能包含英文字母/数字/下划线" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="密码确认:6~16位字符,只能包含英文字母/数字/下划线" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+    <!-- .animated -->
+</div>
+<!-- /.content -->
+{/block}
+
+{block name="scripts"}
+<!--编辑管理员-->
+<script type="text/javascript">
+    $('#editAdmin').on('show.bs.modal',function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        //var modalId = btnThis.data('id');   //解析出data-id的内容
+        var m_id = btnThis.closest('tr').data('id');
+        var m_name = btnThis.closest('tr').find('td').eq(2).text();
+        var m_class = btnThis.closest('tr').find('td').eq(3).text();
+        var m_grade = btnThis.closest('tr').find('td').eq(4).text();
+        var m_telephone = btnThis.closest('tr').find('td').eq(5).data('id');
+        modal.find('#edit_m_name').val(m_name);
+        modal.find('#edit_m_class').val(m_class);
+        modal.find('#edit_m_grade').val(m_grade);
+        modal.find('#edit_m_telephone').val(m_telephone);
+        modal.find('#edit_m_id').val(m_id);
+
+    });
+</script>
+
+<!--删除管理员-->
+<script type="text/javascript">
+    $('#delAdmin').on('show.bs.modal',function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        //var modalId = btnThis.data('id');   //解析出data-id的内容
+        var m_id = btnThis.closest('tr').data('id');
+        var m_name = btnThis.closest('tr').find('td').eq(2).text();
+        var m_class = btnThis.closest('tr').find('td').eq(3).text();
+        var m_grade = btnThis.closest('tr').find('td').eq(4).text();
+        var m_telephone = btnThis.closest('tr').find('td').eq(5).data('id');
+        modal.find('#del_m_name').val(m_name);
+        modal.find('#del_m_class').val(m_class);
+        modal.find('#del_m_grade').val(m_grade);
+        modal.find('#del_m_telephone').val(m_telephone);
+        modal.find('#del_m_id').val(m_id);
+
+    });
+</script>
+{/block}

@@ -1,0 +1,53 @@
+{extend name="common@public/base" /}
+{block name="main-content"}
+<!-- Content -->
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="box-title"></h4>
+                    </div>
+                    <div class="card-body--">
+                        <div class="table-stats">
+                            <table id="bootstrap-data-table" class="table">
+                                <thead>
+                                <tr>
+                                    <th class="serial">序号</th>
+                                    <th>操作者</th>
+                                    <th>时间</th>
+                                    <th>类型</th>
+                                    <th>表</th>
+                                    <th>具体操作</th>
+                                    <th>OS</th>
+                                    <th>浏览器</th>
+                                    <th>IP</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {volist name='info' id='list'}
+                                <tr data-id={$list.id}>
+                                    <td class="serial" >{$i}.</td>
+                                    <td>  <span class="product">{$list.lg_num}</span> </td>
+                                    <td>  <span class="product">{$list.lg_time}</span> </td>
+                                    <td data-id="{$list.type}">  <span class="product" >{$list.type}</span> </td>
+                                    <td data-id={$list.table}>  <span class="product" >{$list.lg_table}</span> </td>
+                                    <td data-id={$list.id_list}>  <span class="product" >{$list.lg_action}</span> </td>
+                                    <td data-id={$list.os}>  <span class="product" >{$list.lg_os}</span> </td>
+                                    <td data-id={$list.brower}>  <span class="product" >{$list.lg_brower}</span> </td>
+                                    <td data-id={$list.ip}>  <span class="product" >{$list.lg_ip}</span> </td>
+                                </tr>
+                                {/volist}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- .animated -->
+</div>
+<!-- /.content -->
+{/block}

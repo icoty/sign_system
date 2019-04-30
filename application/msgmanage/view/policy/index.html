@@ -1,0 +1,59 @@
+{extend name="common@public/base" /}
+{block name="main-content"}
+<!-- Content -->
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-header">
+                        <strong>设置企业微信端用户的使用条款和隐私条款</strong>
+                    </div>
+                    <div class="card-body card-block">
+                        <form id="modify">
+                            <div class=" form-group">
+                                <label for="textarea-input" class=" form-control-label">使用条款和隐私条款</label>
+                                <textarea name="textarea-input" id="textarea-input" rows="16" style="width: 100%"
+                                    placeholder="请填写内容..." class="form-control" required>{$last}</textarea>
+                            </div>
+                        </form>
+                        <button id="submit" class="btn btn-primary btn-sm">修改</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /.content -->
+{/block}
+{block name="scripts"}
+<script src="__STATIC__/assets/js/sweetalert.min.js"></script>
+<script>
+    $('#submit').on('click', function () {
+        swal({
+            title: "确定修改吗？",
+            text: "将覆盖原有内容且不可恢复",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            cancelButtonText: "取消",
+            confirmButtonText: "确定",
+            closeOnConfirm: false
+        }, function () {
+            console.log($('#modify').serializeArray());
+            $.post("{:url('policy/postProvisionDetail', '', '')}", $('#modify').serializeArray(),
+                function (datas) {
+                    var types = 'error'
+                    if (datas.code) {
+                        types = 'success'
+                    }
+                    swal({
+                        title: "提示",
+                        text: datas.msg,
+                        type: types
+                    });
+                });
+        });
+    });
+</script>
+{/block}

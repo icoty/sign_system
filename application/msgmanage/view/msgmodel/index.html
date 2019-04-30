@@ -1,0 +1,298 @@
+{extend name="common@public/base" /}
+{block name="main-content"}
+<!-- Content -->
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="box-title">消息模板&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <button type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#smallModal1">添加模板</button>
+                        </h4>
+                    </div>
+                    <div class="card-body--">
+                        <div class="table-stats">
+                            <table id="bootstrap-data-table" class="table">
+                                <thead>
+                                <tr>
+                                    <th class="serial">序号</th>
+                                    <!--<th>事项ID</th>-->
+                                    <th>模板名称</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {notempty name="templateItems"}
+                                {foreach name="templateItems" item="templateItem"}
+                                <tr>
+                                    <td class="serial">{$key+1}</td>
+                                    <!--<td>  <span class="product">{$templateItem['id']}</span></td>-->
+                                    <td>  <span class="product">{$templateItem['title']}</span></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm mb-1" data-id="{$templateItem.id}" data-des="{$templateItem.title}" data-toggle="modal" data-target="#smallModal2">
+                                            <i class="fa fa-magic"></i>&nbsp;编辑
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm mb-1"  data-id="{$templateItem.id}" data-toggle="modal" data-target="#smallModal3">
+                                            <i class="fa fa-exclamation"></i>&nbsp;删除
+                                        </button>
+                                    </td>
+                                </tr>
+                                {/foreach}
+                                {/notempty}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 添加消息模板时弹出smallModal1 -->
+            <div class="modal fade" id="smallModal1" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-md" role="document" >
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" style="display: inline">添加模板</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <input id="itemTit" name="itemTitle" placeholder="模板名称" class="form-control" style="margin-bottom: 15px;"/>
+                            <textarea id="itemCont" name="itemContent" placeholder="模板内容" class="form-control" style='height:180px;'></textarea>
+                            <!-- <p>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon" >
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </div>
+                                    <input type="text" id="itemTit" name="itemTitle" placeholder="模板名称" class="form-control">
+                                </div>
+                                
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon" >
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </div>
+                                    <input type="text" id="itemCont" name="itemContent" placeholder="模板内容" class="form-control">
+                                </div>
+                            </div>
+                            </p> -->
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary"  id="add_cancel" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-success" id="submit_add" data-dismiss="modal">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal fade" id="smallModal2" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="scrollmodalLabel">编辑模板</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-check-square-o"></i>
+                                    </div>
+                                    <input type="text" id="itemIdE" name="itemIdE" value="01" class="form-control" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-pencil-square-o"></i>
+                                    </div>
+                                    <input type="text" id="itemDesE" name="itemDesE" value="开会" class="form-control">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div id="msg2"></div>
+                            </div>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="modify_cancel" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-success" id="submit_modify" data-dismiss="modal">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="modal fade" id="smallModal3" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-sm" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">删除模板</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                            <div class="form-group">
+                                确定删除吗?
+                            </div>
+                            </p>
+                            <div class="form-group">
+                                <div id="msg3"></div>
+                            </div>
+                            <div>
+                                <input id="id"  type="hidden">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-success" id="submit_delete" data-dismiss="modal">确认</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="smallModal4" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                            <h4 class="modal-title" id="myModalLabel">模态框（Modal）标题</h4>
+                        </div>
+                        <div class="modal-body">点击关闭按钮检查事件功能。</div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                            <button type="button" class="btn btn-primary">提交更改</button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div>
+
+        </div>
+    </div>
+    <!-- .animated -->
+</div>
+{/block}
+{block name="scripts"}
+<script type="text/javascript">
+    $('#smallModal1').on('show.bs.modal', function (e) {
+        $("#msg1").html("");
+    });
+    $('#smallModal4').on('show.bs.modal', function (e) {
+        $("#myModalLabel").html("模态框的标题");
+    });
+
+    $("#add_cancel").on("click", function(){
+        $("#itemTit").val("");
+    });
+
+    //添加消息模板
+    $("#submit_add").on("click", function(){
+        var tit = $("#itemTit").val();
+        var con = $("#itemCont").val();
+        //$("#smallmodal1").modal(true,true,true,false);
+
+        $.ajax({
+            url:"{:url('msgmanage/Msgmodel/addTemplate')}",
+            type:"POST",
+            data:{"tit":tit, "con":con},
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                alert(data.msg);
+                window.location.reload();
+            }
+        })
+    });
+
+    $('#smallModal2').on('show.bs.modal', function (e) {
+        var id = $(e.relatedTarget).data("id");
+        var des = $(e.relatedTarget).data("des");
+        $("#itemIdE").val(id);
+        $("#itemDesE").val(des);
+        $("#msg2").html("");
+    });
+    $("#modify_cancel").on("click", function(){
+        $("#itemDesE").val("");
+
+    });
+    $("#submit_modify").on("click", function(){
+        var id = $("#itemIdE").val();
+        var des = $("#itemDesE").val();
+
+        $.ajax({
+            url:"{:url('')}",
+            type:"POST",
+            data:{"id":id,"des":des},
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                // if(data.code == 1){
+                //     $("#msg2").html("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                //         + data.msg + "</p>");
+                //     setTimeout("location.href='"+data.url+"'",1000);
+                // }else{
+                //     $("#msg2").html("<p class='color-red'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                //         + data.msg + "</p>");
+                // }
+                alert(data.msg);
+                window.location.reload();
+            }
+        })
+    });
+    $('#smallModal3').on('show.bs.modal', function (e) {
+        var id = $(e.relatedTarget).data("id");
+        $("#id").val(id);
+        $("#msg3").html("");
+    });
+
+    $("#submit_delete").on("click", function(){
+        var id = $("#id").val();
+        console.log(id);
+        $.ajax({
+            url:"{:url('')}",
+            type:"POST",
+            data:{"id":id},
+            dataType: "json",
+            success: function (data) {
+                console.log(data);
+                // if(data.code == 1){
+                //     $("#msg3").html("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                //         + data.msg + "</p>");
+                //     setTimeout("location.href='"+data.url+"'",1000);
+                // }else{
+                //     $("#msg3").html("<p class='color-red'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+                //         + data.msg + "</p>");
+                // }
+                alert(data.msg);
+                window.location.reload();
+            }
+        })
+    });
+
+
+    $("#submit_sure").click(function(){
+
+        window.location.reload();
+    });
+    //显示消息modal,信息设为msg
+    function hintShow(msg){
+        $(document).ready(function() {
+            $('#smallModal4').modal({
+                backdrop: 'static',
+                keyboard: false,
+                show: true
+            });
+        });
+    }
+</script>
+<!-- /.content -->
+{/block}

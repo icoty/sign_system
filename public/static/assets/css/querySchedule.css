@@ -1,0 +1,81 @@
+*{
+    margin: 0px;
+    padding: 0px;
+}
+
+#bodyid{
+    /*background: url("pku_logo_red.png");*/
+    background-repeat: no-repeat;
+    background-size:cover;
+    background-attachment: fixed;
+    background-color: #CCCCCC;
+}
+
+#logo{
+    color: white;
+    font-size: 40px;
+    font-family: 华文行楷;
+    color: #A90000;
+    text-align: center;
+    margin-top: 8%;
+    position: center;
+}
+
+#login{
+    color: white;
+    font-size: 40px;
+    font-family: "Courier New";
+    text-align: center;
+    align-content: center;
+    position: center;
+}
+
+#logindiv{
+    margin: 0px;
+    padding-left: 42%;
+    padding-top: 0%;
+}
+
+.starttime{
+    margin-top: 5px;
+    width:300px;
+    height:30px;
+    _height:37px;
+    _line-height:26px;
+    padding:5px;
+    font-size: 16px;
+    color:#B7B7B9;
+    vertical-align:middle ;
+    ime-mode:disabled;
+    border:solid 1px #CCC;
+    border-radius:0px;
+}
+
+.endtime{
+    margin-top: 5px;
+    width:300px;
+    height:30px;
+    _height:37px;
+    _line-height:26px;
+    padding:5px;
+    font-size: 16px;
+    color:#B7B7B9;
+    vertical-align:middle ;
+    ime-mode:disabled;
+    border:solid 1px #CCC;
+    border-radius:0px;
+}
+
+.submit {
+    margin-top: 30px;
+    cursor: pointer;
+    width: 310px;
+    height: 40px;
+    height : 42px\9; /* IE8 and below */
+    border-style:none;
+    background-color:#A90000;
+    font-size: 16px;
+    color:#FFFFFF;
+    vertical-align:bottom;
+    -webkit-appearance:none;
+}

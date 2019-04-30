@@ -1,0 +1,43 @@
+
+
+<header id="header" class="header">
+    <div class="top-left">
+        <div class="navbar-header">
+            <!--<a class="navbar-brand" href="#"><img src="__STATIC__/images/logo.png" alt="Logo"></a>-->
+            <a class="navbar-brand hidden" href="#"><img src="__STATIC__/images/logo2.png" alt="Logo"></a>
+            <a id="menuToggle" class="menutoggle"><i class="fa fa-bars"></i></a>
+        </div>
+    </div>
+    <div class="top-right">
+        <div class="header-menu">
+            <div class="header-left">
+                <a href="{:url('login/login/loginout')}">
+                    {$Request.session.admin_name}[退出]
+                </a>
+
+                <div class="dropdown for-notification">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-bell"></i>
+                        <span class="count bg-danger">2</span>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="message">
+                        <p class="red">待办事项</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-area dropdown float-right">
+                <a href="#" class="dropdown-toggle active" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <img class="user-avatar rounded-circle" src="__STATIC__/images/admin.jpg" alt="User Avatar">
+                </a>
+
+                <div class="user-menu dropdown-menu">
+                    <a class="nav-link" href="#"><i class="fa fa-user"></i>我的资料</a>
+                 <a class="nav-link" href="{:url('login/smsbinding/index')}"><i class="fa fa-mobile-phone"></i> 绑定手机号</a>
+                    <a class="nav-link" href="{:url('login/login/loginout')}"><i class="fa fa-power-off"></i>退出</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</header>

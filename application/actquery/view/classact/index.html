@@ -1,0 +1,488 @@
+{extend name="common@public/base" /}
+{block name="main-content"}
+<!-- Content -->
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="box-title">
+                            <button type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addAct">添加活动</button>
+                            <input type="button" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Classact/export\')}'" value="导出本苑到Excel">
+                            <br>
+                        </h4>
+                    </div>
+
+                    <div class="card-body--">
+                        <div class="table-stats">
+                            <table id="bootstrap-data-table" class="table">
+                                <thead>
+                                <tr>
+                                    <th class="serial">序号</th>
+                                    <th>活动ID</th>
+                                    <th>名称</th>
+                                    <th>创建人</th>
+                                    <th>内容</th>
+                                    <th>地点</th>
+                                    <th>年级</th>
+                                    <th>组织单位</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>标签</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                {volist name='info' id='list'}
+                                <tr data-id={$list.a_id}>
+                                    <td class="serial" >{$i}.</td>
+                                    <td data-id="{$list.a_id}"><span class="product">{$list.a_id}</span></td>
+                                    <td><span class="product">{$list.a_name}</span></td>
+                                    <td><span class="product">{$list.creator}</span></td>
+                                    <td><span class="product">{$list.a_content}</span></td>
+                                    <td><span class="product">{$list.a_place}</span></td>
+                                    <td data-id="{$list.a_grade}"><span class="product">{$list.a_grade}</span></td>
+                                    <td><span class="product">{$list.class}</span></td>
+                                    <td><span class="product">{$list.a_start_time}</span></td>
+                                    <td><span class="product">{$list.a_end_time}</span></td>
+                                    <td><span class="product">{$list.a_label}</span></td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal"
+                                                data-target="#editAct">
+                                            <i class="fa fa-magic"></i>&nbsp;编辑
+                                        </button>
+                                        <button type="button" class="btn btn-danger btn-sm mb-1" data-toggle="modal"
+                                                data-target="#delAct">
+                                            <i class="fa fa-exclamation"></i>&nbsp;删除
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal"
+                                                data-target="#startSign">
+                                            <i class="fa fa-magic"></i>&nbsp;发起签到
+                                        </button>
+                                    </td>
+                                </tr>
+                                {/volist}
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!--添加活动信息-->
+            <form action="addAct" method="post">
+                <div class="modal fade" id="addAct" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="addmodalLabel">添加活动</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_a_name" name="a_name" placeholder="活动名称" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_a_creator" name="a_creator" placeholder={$userInfo['m_name']} class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_a_content" name="a_content" placeholder="活动内容" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_a_place" name="a_place" placeholder="活动地点" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select id="add_a_grade" name="a_grade" placeholder="年级" class="form-control" disabled="disabled">
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_a_class" name="a_class" placeholder={$userInfo['c_name']} class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_a_start_time" name="a_start_time" placeholder="开始时间" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_a_end_time" name="a_end_time" placeholder="结束时间" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="add_a_label" name="a_label" placeholder="活动标签" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!--编辑活动信息-->
+            <form action="editAct" method="post">
+                <div class="modal fade" id="editAct" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editmodalLabel">编辑活动</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="edit_a_id" name="a_id">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_num" name="a_num" placeholder="活动ID" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_name" name="a_name" placeholder="活动名称" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_content" name="a_content" placeholder="活动内容" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_place" name="a_place" placeholder="活动地点" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select id="edit_a_grade" name="a_grade" placeholder="年级" class="form-control" disabled="disabled">
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_class" name="a_class" placeholder="班级名称" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_start_time" name="a_start_time" placeholder="开始时间" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_end_time" name="a_end_time" placeholder="结束时间" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_a_label" name="a_label" placeholder="活动标签" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!--删除活动信息-->
+            <form action="delAct" method="post">
+                <div class="modal fade" id="delAct" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="delmodalLabel">删除活动</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="del_a_id" name="a_id">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_num" name="a_num" placeholder="活动ID" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_name" name="a_name" placeholder="活动名称" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_content" name="a_content" placeholder="活动内容" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_place" name="a_place" placeholder="活动地点" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-group"></i>
+                                        </div>
+                                        <select id="del_a_grade" name="a_grade" placeholder="年级" class="form-control" disabled="disabled">
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                            <option value="2017">2017</option>
+                                            <option value="2018">2018</option>
+                                            <option value="2019">2019</option>
+                                            <option value="2020">2020</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2024">2024</option>
+                                            <option value="2025">2025</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_class" name="a_class" placeholder="班级名称" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_start_time" name="a_start_time" placeholder="开始时间" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_end_time" name="a_end_time" placeholder="结束时间" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_a_label" name="a_label" placeholder="活动标签" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+        </div>
+    </div>
+    <!-- .animated -->
+</div>
+<!-- /.content -->
+{/block}
+
+{block name="scripts"}
+<!--编辑活动信息-->
+<script type="text/javascript">
+    $('#editAct').on('show.bs.modal',function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        //var modalId = btnThis.data('id');   //解析出data-id的内容
+        var a_id = btnThis.closest('tr').data('id');
+        var a_num = btnThis.closest('tr').find('td').eq(1).data('id'); // a_id 和 a_num相同，都是主键，活动ID
+        var a_name = btnThis.closest('tr').find('td').eq(2).text();
+        var a_creator = btnThis.closest('tr').find('td').eq(3).text();
+        var a_content = btnThis.closest('tr').find('td').eq(4).text();
+        var a_place = btnThis.closest('tr').find('td').eq(5).text();
+        var a_grade = btnThis.closest('tr').find('td').eq(6).data('id');
+        var a_class = btnThis.closest('tr').find('td').eq(7).text();
+        var a_start_time = btnThis.closest('tr').find('td').eq(8).text();
+        var a_end_time = btnThis.closest('tr').find('td').eq(9).text();
+        var a_label = btnThis.closest('tr').find('td').eq(10).text();
+        modal.find('#edit_a_name').val(a_name);
+        modal.find('#edit_a_creator').val(a_creator);
+        modal.find('#edit_a_content').val(a_content);
+        modal.find('#edit_a_place').val(a_place);
+        modal.find('#edit_a_grade').val(a_grade);
+        modal.find('#edit_a_class').val(a_class);
+        modal.find('#edit_a_start_time').val(a_start_time);
+        modal.find('#edit_a_end_time').val(a_end_time);
+        modal.find('#edit_a_label').val(a_label);
+        modal.find('#edit_a_id').val(a_id);
+        modal.find('#edit_a_num').val(a_num);
+
+    });
+</script>
+
+<!--删除活动-->
+<script type="text/javascript">
+    $('#delAct').on('show.bs.modal',function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        //var modalId = btnThis.data('id');   //解析出data-id的内容
+        var a_id = btnThis.closest('tr').data('id');
+        var a_num = btnThis.closest('tr').find('td').eq(1).data('id'); // a_id 和 a_num相同，都是主键，活动ID
+        var a_name = btnThis.closest('tr').find('td').eq(2).text();
+        var a_creator = btnThis.closest('tr').find('td').eq(3).text();
+        var a_content = btnThis.closest('tr').find('td').eq(4).text();
+        var a_place = btnThis.closest('tr').find('td').eq(5).text();
+        var a_grade = btnThis.closest('tr').find('td').eq(6).data('id');
+        var a_class = btnThis.closest('tr').find('td').eq(7).text();
+        var a_start_time = btnThis.closest('tr').find('td').eq(8).text();
+        var a_end_time = btnThis.closest('tr').find('td').eq(9).text();
+        var a_label = btnThis.closest('tr').find('td').eq(10).text();
+        modal.find('#del_a_name').val(a_name);
+        modal.find('#del_a_creator').val(a_creator);
+        modal.find('#del_a_content').val(a_content);
+        modal.find('#del_a_place').val(a_place);
+        modal.find('#del_a_grade').val(a_grade);
+        modal.find('#del_a_class').val(a_class);
+        modal.find('#del_a_start_time').val(a_start_time);
+        modal.find('#del_a_end_time').val(a_end_time);
+        modal.find('#del_a_label').val(a_label);
+        modal.find('#del_a_id').val(a_id);
+        modal.find('#del_a_num').val(a_num);
+    });
+</script>
+{/block}
