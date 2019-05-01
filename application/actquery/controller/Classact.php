@@ -58,7 +58,7 @@ class Classact extends Common{
         $data = input('post.');
         dump($data);
         if (empty($data['a_name'])||empty($data['a_content'])||empty($data['a_start_time'])
-            ||empty($data['a_end_time'])||empty($data['a_label'])){
+            ||empty($data['a_end_time'])){
             $this->error('输入不可为空');
         }
 
@@ -74,12 +74,19 @@ class Classact extends Common{
         $data['a_is_delete'] = 0;
 
         $act = new ActivityModel();
-        $ret = $act->addAct($data);
-        if ($ret){
-            $this->success('添加成功');
-        }else{
-            $this->error('添加失败');
+        // 添加活动并返回主键
+        $aid = $act->addAct($data);
+
+        $label = new LabelModel();
+        if ($aid){
+            $ret = $label->editLabelByActId($aid,$data['add_label_id_list']);
+            if($ret){
+                $this->success('添加成功');
+                return;
+            }
         }
+
+        $this->error('添加失败');
     }
 
     public function delAct(){
@@ -95,6 +102,31 @@ class Classact extends Common{
 
     public function editAct(){
         $data = input('post.');
+        $label = new LabelModel();
+
+        // 未传入标签列表，则删除所有标签
+        if(!isset($data['edit_label_id_list'])){
+            $ret = $label->delLabelByActId($data['a_id']);
+            if(!$ret)
+                $this->error('删除标签失败！');
+        }
+
+        $ret = $label->editLabelByActId($data['a_id'],trim($data['edit_label_id_list']));
+        if(!$ret){
+            $this->error('编辑标签失败！');
+        }
+
+        // 获取创建人详细信息插入到数据库
+        $admin = new AdminModel();
+        $ret = $admin->getInfoByNum(1801220025);
+        if(!$ret){
+            $this->error('添加失败');
+        }
+        $data['a_creator'] = $ret['m_id'];
+        $data['a_class_id'] = $ret['m_class_id'];
+        $data['a_grade'] = $ret['m_grade'];
+        $data['a_is_delete'] = 0;
+
         $act = new ActivityModel();
         $ret = $act->editAct($data);
         if($ret){

@@ -88,6 +88,31 @@ class Allact extends Common{
 
     public function editAct(){
         $data = input('post.');
+        $label = new LabelModel();
+
+        // 未传入标签列表，则删除所有标签
+        if(!isset($data['edit_label_id_list'])){
+            $ret = $label->delLabelByActId($data['a_id']);
+            if(!$ret)
+                $this->error('删除标签失败！');
+        }
+
+        $ret = $label->editLabelByActId($data['a_id'],trim($data['edit_label_id_list']));
+        if(!$ret){
+            $this->error('编辑标签失败！');
+        }
+
+        // 获取创建人详细信息插入到数据库
+        $admin = new AdminModel();
+        $ret = $admin->getInfoByNum(1801220025);
+        if(!$ret){
+            $this->error('添加失败');
+        }
+        $data['a_creator'] = $ret['m_id'];
+        $data['a_class_id'] = $ret['m_class_id'];
+        $data['a_grade'] = $ret['m_grade'];
+        $data['a_is_delete'] = 0;
+
         $act = new ActivityModel();
         $ret = $act->editAct($data);
         if($ret){

@@ -238,7 +238,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
                                         </div>
-                                        <select id="edit_a_grade" name="a_grade" placeholder="年级" class="form-control">
+                                        <select id="edit_a_grade" name="a_grade" placeholder="年级" class="form-control" disabled="disabled">
                                             <option value="2015">2015</option>
                                             <option value="2016">2016</option>
                                             <option value="2017">2017</option>
@@ -266,7 +266,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_a_start_time" name="a_start_time" placeholder="开始时间" class="form-control">
+                                        <input type="datetime-local" id="edit_a_start_time" name="a_start_time" placeholder="开始时间" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -274,22 +274,24 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_a_end_time" name="a_end_time" placeholder="结束时间" class="form-control">
+                                        <input type="datetime-local" id="edit_a_end_time" name="a_end_time" placeholder="结束时间" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
+                                            <i class="fa fa-group"></i>
                                         </div>
-                                        <input type="text" id="edit_a_label" name="a_label" placeholder="活动标签" class="form-control">
+                                        {volist name='labelinfo' id='list'}
+                                        <input type="checkbox" id="edit_a_label" name="edit_label_id_list" lname={$list.l_name} value={$list.l_id} />{$list.l_name}
+                                        {/volist}
                                     </div>
                                 </div>
                                 </p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                <button type="submit" class="btn btn-success">确认</button></a>
+                                <button type="submit" class="btn btn-success" id="confirmedit">确认</button></a>
                             </div>
                         </div>
                     </div>
@@ -399,7 +401,9 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="del_a_label" name="a_label" placeholder="活动标签" class="form-control" disabled="disabled">
+                                        {volist name='labelinfo' id='list'}
+                                        <input type="checkbox" id="del_a_label" name="del_label_id_list" lname={$list.l_name} value={$list.l_id} disabled="disabled" />{$list.l_name}
+                                        {/volist}
                                     </div>
                                 </div>
                                 </p>
@@ -445,10 +449,34 @@
         modal.find('#edit_a_class').val(a_class);
         modal.find('#edit_a_start_time').val(a_start_time);
         modal.find('#edit_a_end_time').val(a_end_time);
-        modal.find('#edit_a_label').val(a_label);
         modal.find('#edit_a_id').val(a_id);
         modal.find('#edit_a_num').val(a_num);
 
+        // 已有标签需要设置为选中状态
+        var cb = document.getElementsByName("edit_label_id_list");
+        var strs = new Array();
+        strs = a_label.split(" ");    // 字符串分割为数组
+        console.log(strs);
+        for (i=0; i< strs.length ;i++)
+        {
+            for(j=0; j< cb.length ;j++){
+                if(strs[i] == cb[j].attributes.getNamedItem("lname").nodeValue)
+                    cb[j].checked = true;
+            }
+        }
+    });
+
+    // 获取所有选中的标签ID，用空格隔开传给控制器
+    $("#confirmedit").click(function () {
+        var cb = document.getElementsByName("edit_label_id_list");
+        var lstr = '';
+        for(j=0; j< cb.length ;j++){
+            if(cb[j].checked) {
+                lstr += cb[j].value + " ";
+            }
+        }
+        console.log(lstr);
+        cb[cb.length - 1].value = lstr;
     });
 </script>
 
@@ -480,6 +508,19 @@
         modal.find('#del_a_label').val(a_label);
         modal.find('#del_a_id').val(a_id);
         modal.find('#del_a_num').val(a_num);
+
+        // 已有标签需要设置为选中状态
+        var cb = document.getElementsByName("del_label_id_list");
+        var strs = new Array();
+        strs = a_label.split(" ");    // 字符串分割为数组
+        console.log(strs);
+        for (i=0; i< strs.length ;i++)
+        {
+            for(j=0; j< cb.length ;j++){
+                if(strs[i] == cb[j].attributes.getNamedItem("lname").nodeValue)
+                    cb[j].checked = true;
+            }
+        }
     });
 </script>
 {/block}
