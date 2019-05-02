@@ -83,12 +83,34 @@ class AttendModel extends Model
 
     /**
      * 杨宇
+     * 功能：签入
+     * @$data post数据
+     * return int
+     */
+    public function signIn($data){
+        // 更新签到时间段
+        $ret = Db::table("act2stu")
+            ->insert(['a2s_act_id'=>$data['a_id'],
+                'a2s_stu_num'=>$data['a2s_stu_num'],
+                'a2s_stu_name'=>$data['a2s_stu_name'],
+                'a2s_sign_time'=>date('Y-m-d H:i:s', time()),
+                'a2s_is_delete'=>$data['a2s_is_delete']]);
+        return $ret;
+    }
+
+    /**
+     * 杨宇
      * 功能：扫码签到
      * @$data post数据
      * return int
      */
     public function addAttend($data){
         // 需要判断是否已经存在
+        $ret = Db::table("act2label")
+            ->where('a2l_act_id', $aid)
+            ->where('a2l_label_id', (int)$list[$i])
+            ->where('a2l_is_delete', 1)
+            ->count();
         $ret = Db::table('act2stu')
             ->insert($data);
         return $ret;

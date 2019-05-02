@@ -188,8 +188,57 @@ class ActivityModel extends Model
         }else{
             $ret = Db::table('activity_info')
                 ->where('a_id', $aid)
-                ->update('a_label',$str);
+                ->update(['a_label'=>$str]);
         }
+        return $ret;
+    }
+
+    /**
+     * 杨宇
+     * 功能：设置签到的时间段
+     * @$data post数据
+     * return int
+     */
+    public function editStartEndSignTime($data){
+        //dump($data);
+        // 判断设置的时间是否已经存在,$data需要转换，否则存在相同的记录也会返回false
+        $ret = Db::table("activity_info")
+            ->where('a_id',$data['a_id'])
+            ->where('a_is_delete', 0)
+            ->where('a_start_sign', $data['a_start_sign'])
+            ->where('a_end_sign', $data['a_end_sign'])
+            ->count();
+        //dump($ret);
+        if($ret){
+            // 下发的请求未做任何修改，直接返回
+            return 1;
+        }else{
+            //dump('2222');
+            // 更新签到时间段
+            $ret = Db::table("activity_info")
+                ->where('a_id',$data['a_id'])
+                ->where('a_is_delete', 0)
+                ->update(['a_start_sign'=>$data['a_start_sign'],
+                    'a_end_sign'=>$data['a_end_sign']]);
+            //dump($ret);
+
+        }
+        return $ret;
+    }
+
+    /**
+     * 杨宇
+     * 功能：获取开始签到和截止签到的时间
+     * @$data post数据
+     * return int
+     */
+    public function getStartAdnEndTime($data){
+        // 判断设置的时间是否已经存在
+        $ret = Db::table("activity_info")
+            ->where('a_id',$data['a_id'])
+            ->where('a_is_delete', 0)
+            ->field('a_start_sign，a_end_sign')
+            ->find();
         return $ret;
     }
 

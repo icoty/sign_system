@@ -49,6 +49,7 @@
                                     <td><span class="product">{$list.a_end_time}</span></td>
                                     <td><span class="product">{$list.a_label}</span></td>
                                     <td>
+                                        {if condition="$list.a_creator == 1801220025"}
                                         <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal"
                                                 data-target="#editAct">
                                             <i class="fa fa-magic"></i>&nbsp;编辑
@@ -61,6 +62,7 @@
                                                 data-target="#startSign">
                                             <i class="fa fa-magic"></i>&nbsp;发起签到
                                         </button>
+                                        {/if}
                                     </td>
                                 </tr>
                                 {/volist}
@@ -419,6 +421,72 @@
                     </div>
                 </div>
             </form>
+
+            <!--发起签到-->
+            <form action="{:url('actquery/startsign/index')}" method="get">
+                <div class="modal fade" id="startSign" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editmodalLabel">发起签到</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="sign_a_id" name="a_id">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="sign_a_num" name="a_num" placeholder="活动ID" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="sign_a_name" name="a_name" placeholder="活动名称" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="sign_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="datetime-local" id="sign_a_start_sign" name="a_start_sign" placeholder="开始签到" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="datetime-local" id="sign_a_end_sign" name="a_end_sign" placeholder="结束签到" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success" id="confirmedit">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
     <!-- .animated -->
@@ -427,6 +495,26 @@
 {/block}
 
 {block name="scripts"}
+
+<!--发起签到-->
+<script type="text/javascript">
+    $('#startSign').on('show.bs.modal',function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        //var modalId = btnThis.data('id');   //解析出data-id的内容
+        var a_id = btnThis.closest('tr').data('id');
+        var a_name = btnThis.closest('tr').find('td').eq(2).text();
+        var a_creator = btnThis.closest('tr').find('td').eq(3).text();
+        var a_start_sign = btnThis.closest('tr').find('td').eq(8).text();
+        var a_end_sign = btnThis.closest('tr').find('td').eq(9).text();
+        modal.find('#sign_a_name').val(a_name);
+        modal.find('#sign_a_creator').val(a_creator);
+        modal.find('#sign_a_start_sign').val(a_start_sign);
+        modal.find('#sign_a_end_sign').val(a_end_sign);
+        modal.find('#sign_a_id').val(a_id);
+
+    });
+</script>
 
 <!--添加活动信息-->
 <script type="text/javascript">

@@ -9,7 +9,7 @@ use app\common\controller\Common;
 use app\actquery\model\ActivityModel;
 use app\adminquery\model\AdminModel;
 use app\labelquery\model\LabelModel;
-
+use app\actquery\controller\Startsign;
 
 class Classact extends Common{
     public function index()
@@ -87,6 +87,31 @@ class Classact extends Common{
         }
 
         $this->error('添加失败');
+    }
+
+    public function startSign(){
+        $data = input('post.');
+        dump($data);
+        //$this->qrcode("http://localhost:81/public/index.php/actquery/classact/addSign",4);
+
+        Vendor('phpqrcode.phpqrcode');
+        \QRcode::png("http://localhost:81/public/index.php/actquery/classact/addSign",false,2,4,2);
+        die;
+        return;
+    }
+
+
+    public function addSign(){
+        $data = input('post.');
+        dump($data);
+        return;
+        $act = new ActivityModel();
+        $ret = $act->delAct($data);
+        if($ret){
+            $this->success('删除成功！');
+        }else{
+            $this->error('删除失败！');
+        }
     }
 
     public function delAct(){
