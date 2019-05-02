@@ -100,7 +100,6 @@ class Classact extends Common{
         return;
     }
 
-
     public function addSign(){
         $data = input('post.');
         dump($data);

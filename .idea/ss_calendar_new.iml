@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="WEB_MODULE" version="4">
+  <component name="NewModuleRootManager">
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/application" isTestSource="false" packagePrefix="app\" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/PHPExcel/PHPExcel" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/composer" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/markbaker/complex" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/markbaker/matrix" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpoffice/phpspreadsheet" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpqrcode.bak/bindings" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpqrcode.bak/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpqrcode.bak/temp" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpqrcode.bak/tools" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpqrcode/bindings" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpqrcode/cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpqrcode/temp" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/phpqrcode/tools" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/simple-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/topthink/think-installer" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

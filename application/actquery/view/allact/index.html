@@ -8,7 +8,8 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="box-title">
-                            <input type="button" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Allact/export\')}'" value="导出所有到Excel">
+                            <button type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addAct">添加活动</button>
+                            <input type="button" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Classact/export\')}'" value="导出本苑到Excel">
                             <br>
                         </h4>
                     </div>
@@ -97,7 +98,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled">
+                                        <input type="text" id="add_a_creator" name="a_creator" placeholder={$userInfo['m_name']} class="form-control" disabled="disabled">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -121,7 +122,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
                                         </div>
-                                        <select id="add_a_grade" name="a_grade" placeholder="年级" class="form-control">
+                                        <select id="add_a_grade" name="a_grade" placeholder="年级" class="form-control" disabled="disabled">
                                             <option value="2015">2015</option>
                                             <option value="2016">2016</option>
                                             <option value="2017">2017</option>
@@ -141,7 +142,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_a_class" name="a_class" placeholder="组织单位" class="form-control" disabled="disabled">
+                                        <input type="text" id="add_a_class" name="a_class" placeholder={$userInfo['c_name']} class="form-control" disabled="disabled">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -163,16 +164,18 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
+                                            <i class="fa fa-group"></i>
                                         </div>
-                                        <input type="text" id="add_a_label" name="a_label" placeholder="活动标签" class="form-control">
+                                        {volist name='labelinfo' id='list'}
+                                        <input type="checkbox" id="add_a_label" name="add_label_id_list" lname={$list.l_name} value={$list.l_id} />{$list.l_name}
+                                        {/volist}
                                     </div>
                                 </div>
                                 </p>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                <button type="submit" class="btn btn-success">确认</button></a>
+                                <button type="submit" class="btn btn-success" id="confirmadd">确认</button></a>
                             </div>
                         </div>
                     </div>
@@ -333,7 +336,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="del_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled" disabled="disabled">
+                                        <input type="text" id="del_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -416,6 +419,72 @@
                     </div>
                 </div>
             </form>
+
+            <!--发起签到-->
+            <form action="{:url('actquery/startsign/index')}" method="get">
+                <div class="modal fade" id="startSign" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-sm" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editmodalLabel">发起签到</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="hidden" id="sign_a_id" name="a_id">
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="sign_a_num" name="a_num" placeholder="活动ID" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="sign_a_name" name="a_name" placeholder="活动名称" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="sign_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="datetime-local" id="sign_a_start_sign" name="a_start_sign" placeholder="开始签到时刻" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="datetime-local" id="sign_a_end_sign" name="a_end_sign" placeholder="截止签到时刻" class="form-control">
+                                    </div>
+                                </div>
+                                </p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                                <button type="submit" class="btn btn-success" id="confirmsign">确认</button></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
         </div>
     </div>
     <!-- .animated -->
@@ -424,6 +493,45 @@
 {/block}
 
 {block name="scripts"}
+
+<!--发起签到-->
+<script type="text/javascript">
+    $('#startSign').on('show.bs.modal',function (event) {
+        var btnThis = $(event.relatedTarget); //触发事件的按钮
+        var modal = $(this);  //当前模态框
+        //var modalId = btnThis.data('id');   //解析出data-id的内容
+        var a_id = btnThis.closest('tr').data('id');
+        var a_num = btnThis.closest('tr').data('id');
+        var a_name = btnThis.closest('tr').find('td').eq(2).text();
+        var a_creator = btnThis.closest('tr').find('td').eq(3).text();
+        var a_start_sign = btnThis.closest('tr').find('td').eq(8).text();
+        var a_end_sign = btnThis.closest('tr').find('td').eq(9).text();
+        modal.find('#sign_a_name').val(a_name);
+        modal.find('#sign_a_creator').val(a_creator);
+        //modal.find('#sign_a_start_sign').val(a_start_sign);
+        //modal.find('#sign_a_end_sign').val(a_end_sign);
+        modal.find('#sign_a_id').val(a_id);
+        modal.find('#sign_a_num').val(a_num);
+
+    });
+</script>
+
+<!--添加活动信息-->
+<script type="text/javascript">
+    // 添加活动,获取所有选中的标签ID，用空格隔开传给控制器
+    $("#confirmadd").click(function () {
+        var cb = document.getElementsByName("add_label_id_list");
+        var lstr = '';
+        for(j=0; j< cb.length ;j++){
+            if(cb[j].checked) {
+                lstr += cb[j].value + " ";
+            }
+        }
+        console.log(lstr);
+        cb[cb.length - 1].value = lstr;
+    });
+</script>
+
 <!--编辑活动信息-->
 <script type="text/javascript">
     $('#editAct').on('show.bs.modal',function (event) {

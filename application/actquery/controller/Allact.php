@@ -6,6 +6,7 @@ use app\classquery\model\ClassModel;
 use app\common\controller\Common;
 use app\actquery\model\ActivityModel;
 use app\adminquery\model\AdminModel;
+use app\actquery\controller\Startsign;
 
 use app\labelquery\model\LabelModel;
 use think\Db;
