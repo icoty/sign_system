@@ -223,7 +223,7 @@ class ActivityModel extends Model
             //dump($ret);
 
         }
-        return $ret;
+        return 1;
     }
 
     /**

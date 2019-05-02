@@ -506,12 +506,12 @@
         var a_num = btnThis.closest('tr').data('id');
         var a_name = btnThis.closest('tr').find('td').eq(2).text();
         var a_creator = btnThis.closest('tr').find('td').eq(3).text();
-        //var a_start_sign = btnThis.closest('tr').find('td').eq(8).text();
-        //var a_end_sign = btnThis.closest('tr').find('td').eq(9).text();
+        var a_start_sign = btnThis.closest('tr').find('td').eq(8).text();
+        var a_end_sign = btnThis.closest('tr').find('td').eq(9).text();
         modal.find('#sign_a_name').val(a_name);
         modal.find('#sign_a_creator').val(a_creator);
-        modal.find('#sign_a_start_sign').val(a_start_sign);
-        modal.find('#sign_a_end_sign').val(a_end_sign);
+        //modal.find('#sign_a_start_sign').val(a_start_sign);
+        //modal.find('#sign_a_end_sign').val(a_end_sign);
         modal.find('#sign_a_id').val(a_id);
         modal.find('#sign_a_num').val(a_num);
 
