@@ -155,4 +155,36 @@ class AttendModel extends Model
             ->update(['a2s_is_delete' => 1]);
         return $ret;
     }
+
+    /**
+     * 杨宇
+     * 功能：判断某个学生是否已经签到了某个活动
+     * @$aid 活动id
+     * $stunum 学号
+     * $num 参加者学号
+     * return int
+     */
+    public function signIsExist($aid,$stunum){
+        $ret = Db::table('act2stu')
+            ->where('a2s_act_id',$aid)
+            ->where('a2s_stu_num',$stunum)
+            ->where('a2s_is_delete',0)
+            ->count();
+        dump($ret);
+        return $ret;
+    }
+
+    /**
+     * 杨宇
+     * 功能：导入签到记录
+     * $data
+     * return int
+     */
+    public function importAttend($data){
+        dump($data);
+
+        $ret = Db::table('act2stu')
+            ->insertAll($data);
+        return $ret;
+    }
 }

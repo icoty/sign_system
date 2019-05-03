@@ -76,11 +76,21 @@ class Allattend extends Common{
         }
     }
 
-    public function batchAddByExcel()
+    public function importByExcel()
     {
         dump($_FILES);
-        return;
-        $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        if(empty($_FILES['file']['name'])) {
+            $this->error('输入不可为空');
+        }
+
+        $format = explode(".", $_FILES['file']['name']);  // 新传入的标签用于更新
+        if($format[count($format) - 1] == 'xlsx'){
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        }else if($format[count($format) - 1] == 'xls'){
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+        }else{
+            $this->error('文件格式错误,必须为Excel,文件后缀为.xls或.xlsx');
+        }
 
         try {
             $spreadsheet = $reader->load($_FILES['file']['tmp_name']);
@@ -92,25 +102,30 @@ class Allattend extends Common{
 
         $sqlData = array();
 
+        $att = new AttendModel();
         foreach ($sheet->getRowIterator(2) as $row) {
             $tmp = array();
             foreach ($row->getCellIterator() as $cell) {
                 $tmp[] = $cell->getFormattedValue();
             }
-            $tmp = ['name' => $tmp[0],
-                'work_id' => $tmp[1],
-                'type_id' => $tmp[2],
-                'depart_id' => $tmp[3],
-                'position_id' => $tmp[4]];
+            $ret = $att->signIsExist((int)$tmp[0],(int)$tmp[2]);
+            if($ret){
+                $this->error('导入失败! 活动ID:'.$tmp[0].',学号:'.$tmp[2].' 已经存在！');
+            }
+            $tmp = ['a2s_act_id' => (int)$tmp[0],
+                'a2s_stu_name' => $tmp[1],
+                'a2s_stu_num' => (int)$tmp[2],
+                'a2s_sign_time' => $tmp[3],
+                'a2s_is_delete' => 0];
+            dump($tmp);
             $sqlData[$row->getRowIndex() - 2] = $tmp;
         }
 
-        $userbasic = model("Userbasic");
-        $addFlag = $userbasic->insertAllUser($sqlData);
-        if ($addFlag) {
-            $this->success('批量添加成功');
+        $ret = $att->importAttend($sqlData);
+        if ($ret) {
+            $this->success('导入成功');
         } else {
-            $this->error('添加失败');
+            $this->error('导入失败');
         }
     }
 

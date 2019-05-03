@@ -9,8 +9,8 @@
                     <div class="card-body">
                         <h4 class="box-title">
                             <input type="button" style="height:36px;" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Allattend/export\')}'" value="导出所有到Excel">
-                            <button id="batchShow" type="submit" class="btn btn-success btn-sm" style="height:36px;" >Excel导入格式: 活动ID, 姓名, 学号, 签到时间</button>
-                            <form id="batchAdd" action="batchAddByExcel" enctype="multipart/form-data" method="post" style="display: none">
+                            <button id="importShow" type="submit" class="btn btn-success btn-sm" style="height:36px;" >Excel导入格式: 活动ID, 姓名, 学号, 签到时间</button>
+                            <form id="importAdd" action="importByExcel" enctype="multipart/form-data" method="post" style="display: none">
                                 <input type="file" class="btn btn-success btn-sm" name="file"/>
                                 <input class="btn btn-success btn-sm" type="submit" style="height:36px;" value="上传"/>
                             </form>
@@ -356,13 +356,13 @@
 </script>
 
 <script>
-    $('#batchShow').click(function () {
-        let form = document.getElementById('batchAdd');
+    $('#importShow').click(function () {
+        let form = document.getElementById('importAdd');
         if (form.style.display === 'none') {
-            $('#batchShow').text('取消');
+            $('#importShow').text('取消');
             form.style.display = 'inline';
         } else {
-            $('#batchShow').text('Excel导入格式: 活动ID, 姓名, 学号, 签到时间');
+            $('#importShow').text('Excel导入格式: 活动ID, 姓名, 学号, 签到时间');
             form.style.display = 'none';
         }
     });
