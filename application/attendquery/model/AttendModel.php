@@ -170,7 +170,7 @@ class AttendModel extends Model
             ->where('a2s_stu_num',$stunum)
             ->where('a2s_is_delete',0)
             ->count();
-        dump($ret);
+        //dump($ret);
         return $ret;
     }
 
@@ -181,7 +181,7 @@ class AttendModel extends Model
      * return int
      */
     public function importAttend($data){
-        dump($data);
+        //dump($data);
 
         $ret = Db::table('act2stu')
             ->insertAll($data);

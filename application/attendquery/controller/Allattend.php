@@ -78,7 +78,7 @@ class Allattend extends Common{
 
     public function importByExcel()
     {
-        dump($_FILES);
+        //dump($_FILES);
         if(empty($_FILES['file']['name'])) {
             $this->error('输入不可为空');
         }
@@ -117,7 +117,7 @@ class Allattend extends Common{
                 'a2s_stu_num' => (int)$tmp[2],
                 'a2s_sign_time' => $tmp[3],
                 'a2s_is_delete' => 0];
-            dump($tmp);
+            //dump($tmp);
             $sqlData[$row->getRowIndex() - 2] = $tmp;
         }
 
