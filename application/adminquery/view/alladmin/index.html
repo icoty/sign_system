@@ -8,7 +8,15 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="box-title">
-                            <button type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addAdmin">添加管理员</button>
+                            <button type="submit" style="height:36px;margin-bottom:10px;" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addAdmin">添加管理员</button>
+                            <input type="button" style="height:36px;margin-bottom:10px;" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'AllAdmin/export\')}'" value="导出所有到Excel">
+                            <br>
+                            <button id="importShow" type="submit" class="btn btn-success btn-sm" style="height:36px;" >Excel导入格式: 学号, 姓名, 班级, 年级, 默认密码</button>
+                            <form id="importAdd" action="importByExcel" enctype="multipart/form-data" method="post" style="display: none">
+                                <input type="file" class="btn btn-success btn-sm" name="file"/>
+                                <input class="btn btn-success btn-sm" type="submit" style="height:36px;" value="上传"/>
+                            </form>
+                            <br>
                         </h4>
                     </div>
                     <div class="card-body--">
@@ -33,6 +41,8 @@
                                     <td>  <span class="product">{$list.m_class}</span> </td>
                                     <td>  <span class="product">{$list.m_grade}</span> </td>
                                     <td>  <span class="product">{$list.m_telephone}</span> </td>
+                                    <td>  <span class="product">{$list.m_password}</span> </td>
+                                    <td>  <span class="product">{$list.m_privilege}</span> </td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal" data-target="#editAdmin">
                                             <i class="fa fa-magic"></i>&nbsp;编辑
@@ -117,7 +127,23 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
+                                        <input type="text" id="add_m_privilege" name="m_privilege" placeholder="类型" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="password" id="add_m_password" name="m_password" placeholder="密码" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="password" id="add_m_telephone" name="m_telephone" placeholder="确认密码" class="form-control">
                                     </div>
                                 </div>
                                 </p>
@@ -144,20 +170,21 @@
                             </div>
                             <div class="modal-body">
                                 <input type="hidden" id="edit_m_id" name="m_id">
-                                <p>  <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-user"></i>
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_m_id" name="m_id" placeholder="学号" class="form-control">
                                     </div>
-                                    <input type="text" id="add_m_id" name="m_id" placeholder="学号" class="form-control">
-                                </div>
-                            </div>
+                                </div>>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-credit-card"></i>
                                         </div>
-                                        <input type="text" id="add_m_name" name="m_name" placeholder="姓名" class="form-control">
+                                        <input type="text" id="edit_m_name" name="m_name" placeholder="姓名" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -165,7 +192,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
                                         </div>
-                                        <select name="add_m_class" id="m_class" class="form-control">
+                                        <select name="edit_m_class" id="m_class" class="form-control">
                                             {volist name='classinfo' id='list'}
                                             <option value={$list.c_id}>{$list.c_name}</option>
                                             {/volist}
@@ -177,7 +204,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
                                         </div>
-                                        <select name="add_m_grade" id="m_grade" class="form-control">
+                                        <select name="edit_m_grade" id="m_grade" class="form-control">
                                             <option value="2015">2015</option>
                                             <option value="2016">2016</option>
                                             <option value="2017">2017</option>
@@ -197,7 +224,23 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
+                                        <input type="text" id="edit_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_m_password" name="m_password" placeholder="密码" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="edit_m_privilege" name="m_privilege" placeholder="类型" class="form-control">
                                     </div>
                                 </div>
                                 </p>
@@ -224,20 +267,21 @@
                             </div>
                             <div class="modal-body">
                                 <input type="hidden" id="del_m_id" name="m_id">
-                                <p>  <div class="form-group">
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-user"></i>
+                                <p>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_m_id" name="m_id" placeholder="学号" class="form-control">
                                     </div>
-                                    <input type="text" id="del_m_id" name="m_id" placeholder="学号" class="form-control">
                                 </div>
-                            </div>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-credit-card"></i>
                                         </div>
-                                        <input type="text" id="add_m_name" name="m_name" placeholder="姓名" class="form-control">
+                                        <input type="text" id="del_m_name" name="m_name" placeholder="姓名" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -245,7 +289,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
                                         </div>
-                                        <select name="add_m_class" id="m_class" class="form-control">
+                                        <select name="del_m_class" id="m_class" class="form-control">
                                             {volist name='classinfo' id='list'}
                                             <option value={$list.c_id}>{$list.c_name}</option>
                                             {/volist}
@@ -257,7 +301,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
                                         </div>
-                                        <select name="add_m_grade" id="m_grade" class="form-control">
+                                        <select name="del_m_grade" id="m_grade" class="form-control">
                                             <option value="2015">2015</option>
                                             <option value="2016">2016</option>
                                             <option value="2017">2017</option>
@@ -277,7 +321,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
+                                        <input type="text" id="del_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -285,7 +329,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="密码:6~16位字符,只能包含英文字母/数字/下划线" class="form-control">
+                                        <input type="text" id="del_m_telephone" name="m_telephone" placeholder="密码:6~16位字符,只能包含英文字母/数字/下划线" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -293,7 +337,23 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="密码确认:6~16位字符,只能包含英文字母/数字/下划线" class="form-control">
+                                        <input type="text" id="del_m_telephone" name="m_telephone" placeholder="密码确认:6~16位字符,只能包含英文字母/数字/下划线" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_m_password" name="m_password" placeholder="密码" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-user"></i>
+                                        </div>
+                                        <input type="text" id="del_m_privilege" name="m_privilege" placeholder="类型" class="form-control">
                                     </div>
                                 </div>
                                 </p>
@@ -355,4 +415,18 @@
 
     });
 </script>
+
+<script>
+    $('#importShow').click(function () {
+        let form = document.getElementById('importAdd');
+        if (form.style.display === 'none') {
+            $('#importShow').text('取消');
+            form.style.display = 'inline';
+        } else {
+            $('#importShow').text('Excel导入格式: 学号, 姓名, 班级, 年级, 默认密码');
+            form.style.display = 'none';
+        }
+    });
+</script>
+
 {/block}
