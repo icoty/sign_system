@@ -14,10 +14,27 @@ class AllAdmin extends Common{
     public function index()
     {
         $label = new AdminModel();
-        $info = $label->getClassAdmin(2018, '未名一苑');
+        $class = new ClassModel();
+
+        $info = $label->getAllAdmin();
+        foreach ($info as $key => $value) {
+            $info[$key]['m_class'] = '';
+            $info[$key]['privilege'] = '';
+            $ret = $class->getClassById($info[$key]['m_class_id']);
+            if($ret){
+                $info[$key]['m_class'] = $ret['c_name'];  # 创建者姓名
+            }
+
+            if($info[$key]['m_privilege'] == 1){
+                $info[$key]['privilege'] = '超管';
+            }else if($info[$key]['m_privilege'] == 2){
+                $info[$key]['privilege'] = '教职工';
+            }else if($info[$key]['m_privilege'] == 3){
+                $info[$key]['privilege'] = '普通管理员';
+            }
+        }
         $this->assign('info',$info);
 
-        $class = new ClassModel();
         $classinfo = $class->getAllClass();
         $gradeinfo = $class->getAllGrade();
         $this->assign('classinfo',$classinfo);

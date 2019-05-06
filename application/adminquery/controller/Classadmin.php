@@ -14,7 +14,7 @@ class ClassAdmin extends Common{
     public function index()
     {
         $label = new AdminModel();
-        $info = $label->getClassAdmin(2018, '未名一苑');
+        $info = $label->getClassAdmin(2018, 1);
         $this->assign('info',$info);
 
         $class = new ClassModel();

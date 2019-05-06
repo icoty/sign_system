@@ -30,6 +30,9 @@
                                     <th>班级</th>
                                     <th>年级</th>
                                     <th>手机号</th>
+                                    <th>密码</th>
+                                    <th>权限</th>
+                                    <th>操作</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -42,7 +45,7 @@
                                     <td>  <span class="product">{$list.m_grade}</span> </td>
                                     <td>  <span class="product">{$list.m_telephone}</span> </td>
                                     <td>  <span class="product">{$list.m_password}</span> </td>
-                                    <td>  <span class="product">{$list.m_privilege}</span> </td>
+                                    <td>  <span class="product">{$list.privilege}</span> </td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal" data-target="#editAdmin">
                                             <i class="fa fa-magic"></i>&nbsp;编辑
@@ -127,7 +130,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_m_privilege" name="m_privilege" placeholder="类型" class="form-control">
+                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="手机号,非必填" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -135,7 +138,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="password" id="add_m_password" name="m_password" placeholder="密码" class="form-control">
+                                        <input type="password" id="add_m_password" name="m_password" placeholder="密码6-16位,A-z,0-9,英文符号" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -143,7 +146,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="password" id="add_m_telephone" name="m_telephone" placeholder="确认密码" class="form-control">
+                                        <input type="password" id="add_m_password1" name="m_password1" placeholder="确认密码" class="form-control">
                                     </div>
                                 </div>
                                 </p>
@@ -240,7 +243,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_m_privilege" name="m_privilege" placeholder="类型" class="form-control">
+                                        <input type="text" id="edit_m_password1" name="m_password1" placeholder="确认密码" class="form-control">
                                     </div>
                                 </div>
                                 </p>
