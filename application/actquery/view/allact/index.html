@@ -8,8 +8,7 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="box-title">
-                            <button type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addAct">添加活动</button>
-                            <input type="button" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Classact/export\')}'" value="导出本苑到Excel">
+                            <input type="button" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Classact/export\')}'" value="导出所有到Excel">
                             <br>
                         </h4>
                     </div>
@@ -572,6 +571,7 @@
                     cb[j].checked = true;
             }
         }
+
     });
 
     // 获取所有选中的标签ID，用空格隔开传给控制器
@@ -585,6 +585,7 @@
         }
         console.log(lstr);
         cb[cb.length - 1].value = lstr;
+
     });
 </script>
 

@@ -7,7 +7,7 @@
  */
 
 namespace app\login\controller;
-use app\adminmanage\model\ManageInfo;
+use app\adminquery\model\AdminInfo;
 use think\Controller;
 use think\Request;
 
@@ -15,7 +15,7 @@ class Namelogin extends Controller
 {
     public function index(){
         if(request() -> isPost()){
-            $admin = new ManageInfo();
+            $admin = new AdminInfo();
 
             // 登入驗證代號
             // 1: 帳號錯誤| 2: 密碼錯誤| 3: 登入成功| 4: 帳戶狀態失效| 5: 其他錯誤
@@ -37,7 +37,8 @@ class Namelogin extends Controller
                     $this -> error('OOPS！发生错误，请稍候重试', null, null, 3);
                     break;
                 default:
-                $this -> error('用户名或密码错误', null, null, 3);
+                    $this -> error('用户名或密码错误', null, null, 3);
+                    break;
             }
             return;
         }
