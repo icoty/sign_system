@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: 84333
- * Date: 2019/4/14
- * Time: 0:55
- */
-
 namespace app\login\controller;
+use app\adminquery\model\AdminModel;
 use app\adminquery\model\AdminInfo;
 use think\Controller;
 use think\Request;
@@ -45,5 +39,4 @@ class Namelogin extends Controller
 
         return $this->fetch();
     }
-
 }

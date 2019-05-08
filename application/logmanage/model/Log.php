@@ -170,9 +170,9 @@ class Log extends Model
         $brower = $client->getBrowser();
 
         if($type == 1) {
-            $data = ['lg_number' => $uid, 'lg_type' => $type, 'lg_time' => date('Y-m-d H:i:s', time()), 'lg_os' => $os, 'lg_brower' => $brower, 'ip' => $ip];
+            $data = ['lg_num' => $uid, 'lg_type' => $type, 'lg_time' => date('Y-m-d H:i:s', time()), 'lg_os' => $os, 'lg_brower' => $brower, 'lg_ip' => $ip];
         }else{
-            $data = ['lg_number' => $uid, 'lg_type' => $type, 'lg_time' => date('Y-m-d H:i:s', time()), 'lg_os' => $os, 'lg_brower' => $brower, 'ip' => $ip, 'lg_action' => json_encode($action)];
+            $data = ['lg_num' => $uid, 'lg_type' => $type, 'lg_time' => date('Y-m-d H:i:s', time()), 'lg_os' => $os, 'lg_brower' => $brower, 'lg_ip' => $ip, 'lg_action' => json_encode($action)];
         }
         $res = Db::name('log_info')->insert($data);
         return $res;
@@ -194,6 +194,18 @@ class Log extends Model
 
     /**
      * 杨宇
+     * 功能：查询所有日志
+     * @return array
+     */
+    public function getAllLog(){
+        $list = Db::table('log_info')
+            ->order("lg_time desc")
+            ->select();
+        return $list;
+    }
+
+    /**
+     * 杨宇
      * 功能：查询所有非管理员日志
      * @return array
      */
@@ -201,6 +213,7 @@ class Log extends Model
         $list = Db::table('log_info')
             ->alias('l')
             ->join('manage_info m', 'l.lg_num != m.m_id')
+            ->where("m.m_is_delete=0")
             ->order("l.lg_time desc")
             ->select();
         return $list;

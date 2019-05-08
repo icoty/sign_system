@@ -27,16 +27,16 @@
                                 </thead>
                                 <tbody>
                                 {volist name='info' id='list'}
-                                <tr data-id={$list.id}>
+                                <tr data-id={$list.lg_id}>
                                     <td class="serial" >{$i}.</td>
                                     <td>  <span class="product">{$list.lg_num}</span> </td>
                                     <td>  <span class="product">{$list.lg_time}</span> </td>
                                     <td data-id="{$list.type}">  <span class="product" >{$list.type}</span> </td>
-                                    <td data-id={$list.table}>  <span class="product" >{$list.lg_table}</span> </td>
-                                    <td data-id={$list.id_list}>  <span class="product" >{$list.lg_action}</span> </td>
-                                    <td data-id={$list.os}>  <span class="product" >{$list.lg_os}</span> </td>
-                                    <td data-id={$list.brower}>  <span class="product" >{$list.lg_brower}</span> </td>
-                                    <td data-id={$list.ip}>  <span class="product" >{$list.lg_ip}</span> </td>
+                                    <td data-id={$list.lg_table}>  <span class="product" >{$list.lg_table}</span> </td>
+                                    <td data-id={$list.lg_action}>  <span class="product" >{$list.lg_action}</span> </td>
+                                    <td data-id={$list.lg_os}>  <span class="product" >{$list.lg_os}</span> </td>
+                                    <td data-id={$list.lg_brower}>  <span class="product" >{$list.lg_brower}</span> </td>
+                                    <td data-id={$list.lg_ip}>  <span class="product" >{$list.lg_ip}</span> </td>
                                 </tr>
                                 {/volist}
                                 </tbody>

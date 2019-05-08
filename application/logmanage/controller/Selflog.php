@@ -17,7 +17,7 @@ class Selflog extends Common
 
         $model = new LogModel();
         //$uid = ADMIN_ID;  // app/common/controlier，管理员id：`ADMIN_ID`，管理員username：`ADMIN_NAME`
-        $info = $model->getLogByNum(1);
+        $info = $model->getLogByNum(110);
 
         foreach($info as $key=>$value){
             if ($info[$key]['lg_type'] == 1){

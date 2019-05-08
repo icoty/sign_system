@@ -13,10 +13,6 @@
       <path value="$PROJECT_DIR$/vendor/phpqrcode/temp" />
       <path value="$PROJECT_DIR$/vendor/phpqrcode/tools" />
       <path value="$PROJECT_DIR$/vendor/phpqrcode/bindings" />
-      <path value="$PROJECT_DIR$/vendor/phpqrcode.bak/cache" />
-      <path value="$PROJECT_DIR$/vendor/phpqrcode.bak/temp" />
-      <path value="$PROJECT_DIR$/vendor/phpqrcode.bak/tools" />
-      <path value="$PROJECT_DIR$/vendor/phpqrcode.bak/bindings" />
     </include_path>
   </component>
   <component name="PhpProjectServersManager">

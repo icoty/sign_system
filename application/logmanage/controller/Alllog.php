@@ -15,7 +15,7 @@ class AllLog extends Common
 {
     public function index(){
         $model = new LogModel();
-        $info = $model->getAllUserLog();
+        $info = $model->getAllLog();
 
         foreach($info as $key=>$value){
             if ($info[$key]['lg_type'] == 1){
