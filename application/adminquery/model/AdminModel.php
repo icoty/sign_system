@@ -136,7 +136,7 @@ class AdminModel extends Model
     public function editAdmin($data){
         $ret = Db::table('manage_info')
             ->where('m_id', $data['m_id'])
-            ->update(['m_name' => $data['m_name']]);
+            ->update($data);
         return $ret;
     }
 
@@ -147,7 +147,7 @@ class AdminModel extends Model
      * return int
      */
     public function delAdmin($data){
-        $ret = Db::table('manege_info')
+        $ret = Db::table('manage_info')
             ->where('m_id',$data['m_id'])
             ->update(['m_is_delete' => 1]);
         return $ret;

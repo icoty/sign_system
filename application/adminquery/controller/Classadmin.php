@@ -56,6 +56,7 @@ class ClassAdmin extends Common{
 
     public function editAdmin(){
         $data = input('post.');
+        dump($data);
         $label = new AdminModel();
         $ret = $label->editAdmin($data);
         if($ret){

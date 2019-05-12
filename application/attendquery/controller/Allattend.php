@@ -59,6 +59,14 @@ class Allattend extends Common{
         $att = new AttendModel();
         $ret = $att->delOneAttend($data['a2s_id']);
         if($ret){
+            $model = new LogModel();
+            $uid = Session::get('admin_id');; // 操作人主键id，非学号
+            $type = 4;
+            $table = 'act2stu';
+            $field =[$uid]; // 删除的主键列表, 不是学号
+            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+
+            
             $this->success('删除成功！');
         }else{
             $this->error('删除失败！');

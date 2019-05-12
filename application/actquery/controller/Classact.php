@@ -1,7 +1,7 @@
 <?php
 
 namespace app\actquery\controller;
-
+use app\logmanage\model\Log as LogModel;
 use think\controller;
 use think\Db;
 use app\classquery\model\ClassModel;
@@ -10,6 +10,9 @@ use app\actquery\model\ActivityModel;
 use app\adminquery\model\AdminModel;
 use app\labelquery\model\LabelModel;
 use app\actquery\controller\Startsign;
+
+use think\Session;
+
 
 class Classact extends Common{
     public function index()
@@ -76,6 +79,22 @@ class Classact extends Common{
         $act = new ActivityModel();
         // 添加活动并返回主键
         $aid = $act->addAct($data);
+        
+        $act = new ActivityModel();
+        // 添加活动并返回主键
+        $aid = $act->addAct($data);
+        // 记录日志
+        if($aid){
+            $model = new LogModel();
+            $uid = Session::get('admin_id'); // 操作人主键id，非学号
+            $type = 2;
+            $table = 'user_info';
+            $field = [$aid]; // 增加的主键列表，不是学号
+            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+
+        }else{
+            $this->error('添加失败');
+        }
 
         $label = new LabelModel();
         if ($aid){
@@ -118,6 +137,14 @@ class Classact extends Common{
         $act = new ActivityModel();
         $ret = $act->delAct($data);
         if($ret){
+            
+            $model = new LogModel();
+            $uid = Session::get('admin_id');; // 操作人主键id，非学号
+            $type = 4;
+            $table = 'user_info';
+            $field = [$uid]; // 删除的主键列表, 不是学号
+            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+
             $this->success('删除成功！');
         }else{
             $this->error('删除失败！');
@@ -154,6 +181,23 @@ class Classact extends Common{
         $act = new ActivityModel();
         $ret = $act->editAct($data);
         if($ret){
+            
+            $model = new LogModel();
+            $uid = $uid = Session::get('admin_id'); // 操作人主键id，非学号
+            $type = 3;
+            $table = 'user_info';
+            $field = [
+            '22'=>[
+            'field1'=> ['before value', 'after value'], 
+            'field2'=> ['before value', 'after value']
+            ],
+            '23'=>[
+            'field1'=> ['before value', 'after value'], 
+            'field2'=> ['before value', 'after value']
+            ]
+            ];
+            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+
             $this->success('编辑成功！');
         }else{
             $this->error('编辑失败！');

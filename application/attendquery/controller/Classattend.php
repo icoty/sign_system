@@ -1,6 +1,9 @@
 <?php
 
 namespace app\attendquery\controller;
+use app\logmanage\model\Log as LogModel;
+
+use think\Session;
 
 use app\common\controller\Common;
 use app\adminquery\model\AdminModel;
@@ -48,6 +51,13 @@ class Classattend extends Common{
         $att = new AttendModel();
         $ret = $att->addAttend($data);
         if ($ret){
+            
+            $model = new LogModel();
+            $uid = Session::get('admin_id'); // 操作人主键id，非学号
+            $type = 2;
+            $table = 'act2stu';
+            $field = [$uid]; // 增加的主键列表，不是学号
+            $model->recordLogApi ($uid, $type, $table, $field); 
             $this->success('添加成功');
         }else{
             $this->error('添加失败');
@@ -59,6 +69,13 @@ class Classattend extends Common{
         $att = new AttendModel();
         $ret = $att->delOneAttend($data['a2s_id']);
         if($ret){
+            
+            $model = new LogModel();
+            $uid = Session::get('admin_id'); // 操作人主键id，非学号
+            $type = 4;
+            $table = 'act2stu';
+            $field =[$uid]; // 删除的主键列表, 不是学号
+            $model->recordLogApi ($uid, $type, $table, $field); 
             $this->success('删除成功！');
         }else{
             $this->error('删除失败！');
@@ -70,6 +87,23 @@ class Classattend extends Common{
         $act = new AttendModel();
         $ret = $act->editAttend($data);
         if($ret){
+            
+            $model = new LogModel();
+            $uid = Session::get('admin_id');; // 操作人主键id，非学号
+            $type = 3;
+            $table = 'act2stu';
+            $field = [
+            '22'=>[
+            'field1'=> ['before value', 'after value'], 
+            'field2'=> ['before value', 'after value']
+            ],
+            '23'=>[
+            'field1'=> ['before value', 'after value'], 
+            'field2'=> ['before value', 'after value']
+            ]
+            ];
+            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+
             $this->success('编辑成功！');
         }else{
             $this->error('编辑失败！');

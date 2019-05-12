@@ -1,13 +1,14 @@
 <?php
 
 namespace app\classquery\controller;
-
+use app\logmanage\model\Log as LogModel;
 use app\common\controller\Common;
 use app\classquery\model\ClassModel;
 
 use think\controller;
 use think\Db;
 use think\Request;
+use think\Session;
 
 class Classinfo extends Common{
     public function index()
@@ -47,6 +48,13 @@ class Classinfo extends Common{
         // 不存在则添加
         $ret = $label->addClass($data['c_name']);
         if ($ret){
+            $model = new LogModel();
+            $uid = Session::get('admin_id'); // 操作人主键id，非学号
+            $type = 2;
+            $table = 'class_info';
+            $field = [$uid]; // 增加的主键列表，不是学号
+            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+
             $this->success('添加成功');
         }else{
             $this->error('添加失败');
@@ -58,6 +66,14 @@ class Classinfo extends Common{
         $label = new ClassModel();
         $ret = $label->delClass($data);
         if($ret){
+            
+            $model = new LogModel();
+            $uid = Session::get('admin_id');; // 操作人主键id，非学号
+            $type = 4;
+            $table = 'class_info';
+            $field = [$uid]; // 删除的主键列表, 不是学号
+            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+
             $this->success('删除成功！');
         }else{
             $this->error('删除失败！');
@@ -69,6 +85,23 @@ class Classinfo extends Common{
         $label = new ClassModel();
         $ret = $label->editClass($data);
         if($ret){
+            
+            $model = new LogModel();
+            $uid = $uid = Session::get('admin_id'); // 操作人主键id，非学号
+            $type = 3;
+            $table = 'class_info';
+            $field = [
+            '22'=>[
+            'field1'=> ['before value', 'after value'], 
+            'field2'=> ['before value', 'after value']
+            ],
+            '23'=>[
+            'field1'=> ['before value', 'after value'], 
+            'field2'=> ['before value', 'after value']
+            ]
+            ];
+            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+
             $this->success('编辑成功！');
         }else{
             $this->error('编辑失败！');
