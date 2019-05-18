@@ -1,10 +1,190 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="">
+<!--<![endif]-->
+
+{include file='common@public:header' /}
+
+<body class="bg-dark">
+<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+            <div class="login-logo">
+                <a href="index.html">
+                    <img class="align-content" src="__STATIC__/images/login.png" alt="">
+                </a>
+            </div>
+            <div class="login-form">
+                <form action="" method="POST">
+                    <div class="form-group">
+                        <input type="text" class="form-control" placeholder="请输入与账户绑定的手机号" id="telephone" >
+                    </div>
+                    <div class="form-group">
+                        <input  type="text" class="form-control" placeholder="请输入短信验证码" id="phonecode">
+                        <button type="button" class="btn btn-info" style="margin-top:7px;margin-bottom: 8px;" onclick="get_code();">获取验证码</button>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="请输入新密码 6-18位:A-z,0-9,英文符号组成" class="form-control" id="password1">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="请再次输入密码 6-18位:A-z,0-9,英文符号组成" class="form-control" id="password2">
+                    </div>
+
+                    <div class="checkbox">
+                        <label class="pull-right">
+                            <a href="<?php echo url('login/namelogin/index'); ?>">知道密码，去登陆！</a>
+                        </label>
+                    </div>
+
+                    <div>
+                        <button type="button" class="btn btn-success" onclick="verify();">提交</button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="__STATIC__/assets/js/vendor/jquery-2.1.4.min.js"></script>
+<script src="__STATIC__/assets/js/popper.min.js"></script>
+<script src="__STATIC__/assets/js/bootstrap.min.js"></script>
+<script src="__STATIC__/assets/js/jquery.matchHeight.min.js"></script>
+<script src="__STATIC__/assets/js/main.js"></script>
+
+<script src="__STATIC__/assets/js/lib/sha256/sha256.js"></script>
 
 </body>
+
 </html>
+
+
+<!-- /.content -->
+{/block}
+{block name="scripts"}
+<script type="text/javascript">
+    var telephone=document.getElementById("telephone");
+    var phonecode=document.getElementById("phonecode");
+    var password1=document.getElementById("password1");
+    var password2=document.getElementById("password2");
+
+    function get_code(){
+        if(telephone.value.length==0){
+            alert("手机号不能为空");
+            return;
+        }
+        if(telephone.value.length!=11){
+            alert("请输入正确的手机号");
+            return;
+        }
+        $.ajax({
+            url: 'getCode',
+            type: 'post',
+            data: {
+                telephone: telephone.value,
+                signature: 'pkusstelephone'
+            },
+            dataType:"json",
+            success:function(data) {
+                if (data) {
+                    // alert(data);
+                    var jsonobj=eval("("+data+")");
+                    //alert(jsonobj);
+                    if (jsonobj.code== 1) {
+                        alert('验证码发送成功');
+                    }
+                    else if (jsonobj.code== 2) {
+                        alert('验证码发送失败');
+                    }
+                    else if (jsonobj.code == 3) {
+                        alert('手机号不存在');
+                    }
+                    else if(jsonobj.code==4){
+                        alert('操作过于频繁，请稍后再试');
+                    }
+                    else if(jsonobj.code==5){
+                        alert('未知签名');
+                    }
+                    else {
+                        alert(jsonobj);
+                    }
+                }
+            }
+        });
+    }
+
+    function verify() {
+        if(telephone.value.length==0){
+            alert("手机号不能为空");
+            return;
+        }
+        if(telephone.value.length!=11){
+            alert("请输入正确的手机号");
+            return;
+        }
+        if(phonecode.value.length==0){
+            alert("请输入验证码");
+            return;
+        }
+        if(phonecode.value.length!=6){
+            alert("请输入6位验证码");
+            return;
+        }
+
+        if(password1.value.length<8 || password1.value.length>16 || password2.value.length<8 || password2.value.length>16){
+            alert("请输入正确的密码长度");
+            return;
+        }
+
+        if(password1.value != password2.value){
+            alert("两次输入的密码不一致");
+            return;
+        }
+
+        $.ajax({
+            url : 'codeVerify',
+            type : 'post',
+            data : {
+                telephone : telephone.value,
+                phonecode : phonecode.value,
+                signature : 'pkussphonecode',
+                password : sha256_digest(password1.value)
+            },
+            dataType:"json",
+            success:function(data) {
+                if (data) {
+                    //var jsonobj1=eval("("+data+")");
+                    // alert(data.time);
+                    //  alert(data.timenow);
+                    // alert(data.phonecode);
+                    //  alert(data.verifycode);
+                    if (data.code == 1) {
+                        alert('密码重置成功！');
+                        window.location.href="public/index.php"
+                    }
+                    else if (data.code == 2) {
+                        alert('请输入正确的验证码');
+                    }
+                    else if (data.code == 3) {
+                        alert('请稍后再试');
+                    }
+                    else if (data.code == 4) {
+                        alert('验证码已失效');
+                    }
+                    else if(data.code==5){
+                        alert('未知签名');
+                    }else if(data.code == 6){
+                        alert('密码重置失败，请重试');
+                    }
+                }
+                else{
+                    alert(data);
+                }
+            }
+        });
+    }
+</script>
+{/block}

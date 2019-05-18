@@ -2,6 +2,7 @@
 namespace app\login\controller;
 use app\adminquery\model\AdminModel;
 use app\adminquery\model\AdminInfo;
+use app\login\model\Sha;
 use think\Controller;
 use think\Request;
 
@@ -9,7 +10,6 @@ class Namelogin extends Controller
 {
     public function index(){
         if(request() -> isPost()){
-            $admin = new AdminInfo();
 
             // 登入驗證代號
             // 1: 帳號錯誤| 2: 密碼錯誤| 3: 登入成功| 4: 帳戶狀態失效| 5: 其他錯誤
@@ -19,6 +19,9 @@ class Namelogin extends Controller
             }else{
                 $this -> error('请输入完整登入信息');
             }
+
+            $admin = new AdminInfo();
+
             $num = $admin -> checkLogin($username, $password);
             switch ($num){
                 case 3:

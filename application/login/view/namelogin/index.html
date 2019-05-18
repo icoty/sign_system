@@ -22,25 +22,21 @@
                         <h5>测试账号 { username: 110 password: 10010 }</h5>
                     </div>
 
-                    <form action="" method="POST">
-                        <div class="form-group">
-                            <label>学号/教职工号</label>
-                            <input type="text" class="form-control" name="username">
-                        </div>
-                        <div class="form-group">
-                            <label>密码</label>
-                            <input type="password" class="form-control" name="password">
-                        </div>
+                    <form action="index" method="POST">
+                        <div class="form-group">学号/教职工号<input type="text" class="form-control" name="username" id="username"></div>
+
+                        <div class="form-group">密码<input type="password" class="form-control" name="password" id="password"></div>
+
                         <div class="checkbox">
-                            <label>
+                            <!--label>
                                 <input type="checkbox"> 记住我
-                            </label>
+                            </label-->
                             <label class="pull-right">
-                                <a href="#">忘记密码?</a>
+                                <a href="<?php echo url('login/phonelogin/index'); ?>">忘记密码 / 修改密码 ?</a>
                             </label>
 
                         </div>
-                        <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30">登入</button>
+                        <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30" onclick="login()">登入</button>
                         
                     </form>
                 </div>
@@ -54,6 +50,25 @@
     <script src="__STATIC__/assets/js/jquery.matchHeight.min.js"></script>
     <script src="__STATIC__/assets/js/main.js"></script>
 
+    <script src="__STATIC__/assets/js/lib/sha256/sha256.js"></script>
+
 </body>
 
 </html>
+
+
+<!-- /.content -->
+{/block}
+{block name="scripts"}
+
+<!--登陆加密传输 sha256-->
+<script type="text/javascript">
+    function login() {
+        var cb = document.getElementById("password");
+        var str = new String(cb.value);
+        cb.value = sha256_digest(str);
+    }
+
+</script>
+
+{/block}

@@ -1,5 +1,6 @@
 {extend name="common@public/base" /}
 {block name="main-content"}
+
 <!-- Content -->
 <div class="content">
     <div class="animated fadeIn">
@@ -10,20 +11,21 @@
                         <h4 class="box-title">绑定手机号码
                         </h4>
                     </div>
-                    <div class="card-body--">
+                    <div class="card-body--" style="padding-left: 100px;padding-right: 600px;">
                         <div class="form-group">
                             <div class="form-group">
-                                <label for="telephone">手机号码：</label>
-                                <input type="text" class="form-control" placeholder="手机号码" id="telephone" >
+                                <input type="text" class="form-control" placeholder="请输入你要绑定的手机号码" id="telephone" >
                             </div>
+                            <!--div class="form-group">
+                                <div id="v_container" style="width: 200px;height: 50px;display:inline;"></div>
+                                <input type="text" id="code_input" value="" style="display:inline;" placeholder="请输入验证码"/>
+
+                            </div-->
                             <div class="form-group">
-                                <button type="button" class="btn btn-info" onclick="get_code();">获取验证码</button>
-                            </div>
-                            <div class="form-group">
-                                <label for="phonecode">验证码：</label>
-                                <input  type="text" class="form-control" placeholder="验证码" id="phonecode">
+                                <input  type="text" class="form-control" placeholder="请输入短信验证码" id="phonecode">
                             </div>
                             <div>
+                                <button id="btn" type="button" class="btn btn-info" onclick="getCode();">获取验证码</button>
                                 <button type="button" class="btn btn-success" onclick="verify();">提交</button>
                             </div>
                         </div>
@@ -37,66 +39,85 @@
 <!-- /.content -->
 {/block}
 {block name="scripts"}
+<script src="__STATIC__/assets/js/gVerify.js"></script>
 <script type="text/javascript">
     var telephone=document.getElementById("telephone");
     var phonecode=document.getElementById("phonecode");
-    function get_code(){
-        if(telephone.value.length==0){
+    var photocode = new GVerify("v_container");//创建图形验证码，提高系统安全性
+    function getCode(){
+
+        if(telephone.value.length==0){//判断手机号是否为空
             alert("手机号不能为空");
             return;
         }
-        if(telephone.value.length!=11){
+        if(telephone.value.length!=11){//判断手机号长度是否正确
             alert("请输入正确的手机号");
             return;
         }
+
+        /*
+        // alert(document.getElementById("code_input").value);
+        if(document.getElementById("code_input").value.length==0){//判断是否已经输入了图形验证码
+            alert("请先输入图形验证码！");
+            return;
+        }
+        var res = photocode.validate(document.getElementById("code_input").value);//验证图形验证码是否正确
+        if(!res){
+            alert("验证码输入错误，请重试！");
+            photocode.refresh();//如果输入错误则刷新验证图形
+            return;
+        }*/
+
+        //手机格式正确并且图形验证码正确，则将数据传输至后端
         $.ajax({
             url: 'getCode',
             type: 'post',
             data: {
                 telephone: telephone.value,
-                signature: 'pkusstelephone'
+                signature: 'pkusstelephone'//传输签名防止构造post攻击后端
             },
             dataType:"json",
             success:function(data) {
-              //alert('test');
-                if (data) {
-                 // alert(data);
-                   var jsonobj=eval("("+data+")");
-                  //alert(jsonobj);
-                    if (jsonobj.code== 1) {
-                        alert('验证码发送成功');
+                //  alert(jsonobj);
+                if (data) {//根据判断手机验证码的结果输出
+                    // alert(data);
+                    // var jsonobj=eval(data);
+                    //alert(jsonobj);
+                    if (data== 1) {
+                        alert('验证码发送成功，请在5分钟之内输入收到的验证码');
                     }
-                    else if (jsonobj.code== 2) {
+                    else if (data== 2) {
                         alert('验证码发送失败');
                     }
-                    else if (jsonobj.code == 3) {
+                    else if (data== 3) {
                         alert('手机号已注册');
                     }
-                    else if(jsonobj.code==4){
+                    else if(data==4){
                         alert('	操作过于频繁，请稍后再试');
                     }
-                  else if(jsonobj.code==5){
+                    else if(data==5){
                         alert('错误');
                     }
-                    else {
-                        alert(jsonobj);
-                    }
+                }
+                else {
+                    alert(data);
                 }
             }
 
         });
     }
-    function verify() {
+    function verify() {//点击确认按钮则需要验证输入的手机验证码是否正确
         //                alert(mobile.value);
         //                alert();
-        if(phonecode.value.length==0){
+        if(phonecode.value.length==0){//判断输入的手机验证码是否为空
             alert("请输入验证码");
             return;
         }
-        if(phonecode.value.length!=6){
+        if(phonecode.value.length!=6){//判断输入的手机验证码是否为6位
             alert("请输入6位验证码");
             return;
         }
+        //将判断为格式正确的手机验证码传至后端
         $.ajax({
             url : 'codeVerify',
             type : 'post',
@@ -106,13 +127,13 @@
             },
             dataType:"json",
             success:function(data) {
-                if (data) {
+                if (data) {//根据返回的结果进行输出
                     //var jsonobj1=eval("("+data+")");
-                 // alert(data.time);
-                //  alert(data.timenow);
-                 // alert(data.phonecode);
-                //  alert(data.verifycode);
-                    if (data.code == 1) {
+                    // alert(data.time);
+                    //  alert(data.timenow);
+                    // alert(data.phonecode);
+                    //  alert(data.verifycode);
+                    if (data.code == 1) {//如果绑定成功则跳转至首页
                         alert('绑定成功');
                         window.location.href="http://114.116.99.20/calendar_new/public/index.php"
                     }
@@ -125,7 +146,7 @@
                     else if (data.code == 4) {
                         alert('验证码已失效');
                     }
-                  else if(data.code==5){
+                    else if(data.code==5){
                         alert('错误');
                     }
                 }
