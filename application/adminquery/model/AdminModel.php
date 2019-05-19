@@ -10,6 +10,35 @@ class AdminModel extends Model
 {
     /**
      * 杨宇
+     * 功能：获取管理员班级ID
+     * @param
+     * @$num：管理员学号
+     * return list
+     */
+    public function getAdminInfoByNum($num){
+        $list = DB::table('manage_info')
+            ->where('m_id',$num)
+            ->find();
+        return $list;
+    }
+
+    /**
+     * 杨宇
+     * 功能：获取管理员班级ID
+     * @param
+     * @$num：管理员学号
+     * return list
+     */
+    public function getClassId($num){
+        $list = DB::table('manage_info')
+            ->where('m_id',$num)
+            ->field('m_class_id')
+            ->find();
+        return $list;
+    }
+
+    /**
+     * 杨宇
      * 功能：通过管理员ID获取个人详细信息
      * @param
      * @$num：管理员学号
@@ -50,9 +79,8 @@ class AdminModel extends Model
      * @$cid: 班级id
      * return list
      */
-    public function getClassAdmin($year, $cid){
+    public function getClassAdmin($cid){
         $list = Db::table('manage_info')
-            ->where('m_grade', $year)
             ->where('m_class_id', $cid)
             ->where('m_is_delete',0)
             ->select();
@@ -68,7 +96,7 @@ class AdminModel extends Model
     public function getAllAdmin(){
         $ret = Db::table('manage_info')
             ->where('m_is_delete',0)
-            ->order("manage_info.m_grade desc")
+            ->order("m_grade desc")
             ->select();
         return $ret;
     }
@@ -150,6 +178,72 @@ class AdminModel extends Model
         $ret = Db::table('manage_info')
             ->where('m_id',$data['m_id'])
             ->update(['m_is_delete' => 1]);
+        return $ret;
+    }
+
+
+    /**
+     * 杨宇
+     * 功能：通过手机号获取salt
+     * return int
+     */
+    public function getSaltByTel($tel){
+        $ret = Db::table('manage_info')
+            ->where('m_telephone',$tel)
+            ->field('m_salt')
+            ->find();
+        return $ret;
+    }
+
+    /**
+     * 杨宇
+     * 功能：通过手机号获取salt
+     * return int
+     */
+    public function getSaltByNum($num){
+        $ret = Db::table('manage_info')
+            ->where('m_id',$num)
+            ->field('m_salt')
+            ->find();
+        return $ret;
+    }
+
+    /**
+     * 杨宇
+     * 功能：通过手机号重置密码
+     * return int
+     */
+    public function resetPassword($tel,$pass){
+        $ret = Db::table('manage_info')
+            ->where('m_telephone',$tel)
+            ->update(['m_password' => $pass]);
+        return $ret;
+    }
+
+
+    /**
+     * 杨宇
+     * 功能：判断手机号是否已经存在
+     * return int
+     */
+    public function hasTelephone($tel){
+        $ret = Db::table('manage_info')
+            ->where('m_telephone',$tel)
+            ->where('m_is_delete',0)
+            ->find();
+        return $ret;
+    }
+
+    /**
+     * 杨宇
+     * 功能：绑定手机号
+     * return int
+     */
+    public function bindTelephone($id,$tel)
+    {
+        $ret = Db::name('manage_info')
+            ->where('m_id', $id)
+            ->update(['m_telephone' => $tel]);
         return $ret;
     }
 }

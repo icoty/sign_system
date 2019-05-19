@@ -8,7 +8,7 @@ use app\attendquery\model\AttendModel;
 use app\common\controller\Common;
 use app\adminquery\model\AdminModel;
 use app\classquery\model\ClassModel;
-
+use app\login\model\Sha;
 use think\controller;
 use think\Db;
 use think\Request;
@@ -16,10 +16,10 @@ use think\Request;
 class Alladmin extends Common{
     public function index()
     {
-        $label = new AdminModel();
+        $admin = new AdminModel();
         $class = new ClassModel();
 
-        $info = $label->getAllAdmin();
+        $info = $admin->getAllAdmin();
         foreach ($info as $key => $value) {
             $info[$key]['m_class'] = '';
             $info[$key]['privilege'] = '';
@@ -37,11 +37,19 @@ class Alladmin extends Common{
             }
         }
         $this->assign('info',$info);
+        $this->assign('admin_id',Session::get('admin_id'));
 
         $classinfo = $class->getAllClass();
         $gradeinfo = $class->getAllGrade();
         $this->assign('classinfo',$classinfo);
         $this->assign('gradeinfo',$gradeinfo);
+
+        // 获取当前用户的姓名和和班级信息传给前端
+        $userInfo = $admin->getInfoByNum(Session::get('admin_id'));
+        if($userInfo){
+            $this->assign('userInfo', $userInfo);
+        }
+
         return $this->fetch();
     }
 
@@ -57,19 +65,29 @@ class Alladmin extends Common{
 
         if($data['m_password1'] != $data['m_password2']){
             $this->error('两次输入的密码不一致！');
-        }else{
-            $data['m_password'] = md5($data['m_password1']);
         }
+
+        $sha = new Sha();
+        $salt = $sha->getRandomStr(256);
+        $data['m_salt'] = $salt;
+        $salt .= $data['m_password1'];
+        $data['m_password'] = $sha->sha256($salt);
         $data['m_is_delete'] = 0;
         // 删除多余的数组元素
         unset($data['m_password1']);
         unset($data['m_password2']);
 
-        // 标签已经存在且未被软删除弹窗提示
+        // 管理员已经存在且未被软删除弹窗提示
         $admin = new AdminModel();
         $ret = $admin->isExistAndNotDel($data['m_id']);
         if ($ret){
             $this->error('学号已经存在');
+            return;
+        }
+
+        $ret = $admin->hasTelephone($data['m_telephone']);
+        if ($ret){
+            $this->error('手机号已被注册');
             return;
         }
 
@@ -78,7 +96,17 @@ class Alladmin extends Common{
         if ($ret){
             $ret = $admin->recoverAdmin($data['m_id']);
             if ($ret){
-                $this->success('该学号被软删除, 恢复成功');
+                $model = new LogModel();
+                $uid = Session::get('admin_id');; // 操作人主键id，非学号
+                $type = 3;
+                $table = 'manage_info';
+                $field = [$data['m_id'] => ['m_is_delete' => [1, 0]]]; // 删除的主键列表, 不是学号
+                $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+                if (!$ret) {
+                    $this->error('该标签被软删除,恢复成功,日志记录失败！');
+                } else {
+                    $this->success('该标签被软删除,恢复成功,日志记录成功！');
+                }
             }else{
                 $this->error('该学号被软删除, 恢复失败');
             }
@@ -86,15 +114,19 @@ class Alladmin extends Common{
         }
 
         // 不存在则添加
-        $ret = $admin->addAdmin($data);
-        if ($ret){
+        $id = $admin->addAdmin($data);
+        if ($id){
             $model = new LogModel();
             $uid = Session::get('admin_id'); // 操作人主键id，非学号
             $type = 2;
             $table = 'manage_info';
-            $field = [$uid]; // 增加的主键列表，不是学号
-            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
-            $this->success('添加成功');
+            $field = [$data['m_id']]; // 增加的主键列表，不是学号
+            $ret = $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+            if($ret) {
+                $this->success('添加成功, 日志记录成功');
+            }else{
+                $this->error('添加成功, 日志记录失败');
+            }
         }else{
             $this->error('添加失败');
         }
@@ -105,45 +137,82 @@ class Alladmin extends Common{
         $label = new AdminModel();
         $ret = $label->delAdmin($data);
         if($ret){
-            
             $model = new LogModel();
-            $uid = Session::get('admin_id');; // 操作人主键id，非学号
+            $uid = Session::get('admin_id'); // 操作人主键id，非学号
             $type = 4;
             $table = 'manager_info';
-            $field =[$uid]; // 删除的主键列表, 不是学号
-            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
-
-            $this->success('删除成功！');
+            $field =[$data['m_id'] => ['m_is_delete' => [0,1]]]; // 删除的主键列表, 不是学号
+            $ret = $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+            if($ret) {
+                $this->success('删除成功, 日志记录成功');
+            }else{
+                $this->error('删除成功, 日志记录失败');
+            }
         }else{
             $this->error('删除失败！');
         }
     }
 
+    public function editLogJson($old, $new){
+        $log = array();
+
+        if($new['m_name'] != $old['m_name']){
+            $item = ['m_name' => [$old['m_name'], $new['m_name']]];
+            $log[] = $item;
+        }
+        if($new['m_id'] != $old['m_id']){
+            $item = ['m_id' => [$old['m_id'], $new['m_id']]];
+            $log[] = $item;
+        }
+        if($new['m_class_id'] != $old['m_class_id']){
+            $item = ['m_class_id' => [$old['m_class_id'], $new['m_class_id']]];
+            $log[] = $item;
+        }
+        if($new['m_grade'] != $old['m_grade']){
+            $item = ['m_grade' => [$old['m_grade'], $new['m_grade']]];
+            $log[] = $item;
+        }
+        if($new['m_privilege'] != $old['m_privilege']){
+            $item = ['m_privilege' => [$old['m_privilege'], $new['m_privilege']]];
+            $log[] = $item;
+        }
+        return $log;
+    }
+
+
     public function editAdmin(){
         $data = input('post.');
-        $label = new AdminModel();
-        $ret = $label->editAdmin($data);
-        if($ret){
-            
-            $model = new LogModel();
-            $uid = $uid = Session::get('admin_id'); // 操作人主键id，非学号
-            $type = 3;
-            $table = 'manager_info';
-            $field = [
-            '22'=>[
-            'field1'=> ['before value', 'after value'], 
-            'field2'=> ['before value', 'after value']
-            ],
-            '23'=>[
-            'field1'=> ['before value', 'after value'], 
-            'field2'=> ['before value', 'after value']
-            ]
-            ];
-            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+        unset($data['m_num']);
+        $data['m_name'] = trim($data['m_name']);
+        //dump($data);
 
-            $this->success('编辑成功！');
+        $label = new AdminModel();
+        $old = $label->getAdminInfoByNum($data['m_id']);
+        $logJson = $this->editLogJson($old, $data);
+
+        if($logJson) {
+            //dump($logJson);
+            $ret = $label->editAdmin($data);
+            if ($ret) {
+                $model = new LogModel();
+                $uid = $uid = Session::get('admin_id'); // 操作人主键id，非学号
+                $type = 3;
+                $table = 'manager_info';
+                $field = [
+                    $data['m_id'] => $logJson
+                ];
+                $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+                if($ret) {
+                    $this->success('编辑成功, 日志记录成功');
+                }else{
+                    $this->error('编辑成功, 日志记录失败');
+                }
+            } else {
+                $this->error('编辑失败！');
+            }
+            return;
         }else{
-            $this->error('编辑失败！');
+            $this->error('未做任何修改！');
         }
     }
 
@@ -203,9 +272,9 @@ class Alladmin extends Common{
     public function export(){
         //1.从数据库中取出数据
         echo "ddd";
-        $attend = new AttendModel();
+        $attend = new AdminModel();
         // to do
-        $list = $attend->getAllActAttend();
+        $list = $attend->getAllAdmin();
         echo "aaa";
         //2.加载PHPExcle类库
         vendor('PHPExcel.PHPExcel');
@@ -216,23 +285,12 @@ class Alladmin extends Common{
         //5.设置表格头（即excel表格的第一行）
         $objPHPExcel->setActiveSheetIndex(0)
             ->setCellValue('A1', '序号')
-            ->setCellValue('B1', '活动ID')
-            ->setCellValue('C1', '活动名称')
-            ->setCellValue('D1', '活动地点')
-            ->setCellValue('E1', '活动内容')
-            ->setCellValue('F1', '活动标签')
-            ->setCellValue('G1', '创建时间')
-            ->setCellValue('H1', '开始时间')
-            ->setCellValue('I1', '结束时间')
-            ->setCellValue('J1', '举办年级')
-            ->setCellValue('K1', '组织单位')
-            ->setCellValue('L1', '创建人')
-            ->setCellValue('M1', '创建人学号')
-            ->setCellValue('N1', '参加人')
-            ->setCellValue('O1', '参加人学号')
-            ->setCellValue('P1', '开始签到')
-            ->setCellValue('Q1', '结束签到')
-            ->setCellValue('R1', '签到时间');
+            ->setCellValue('B1', '学号')
+            ->setCellValue('C1', '姓名')
+            ->setCellValue('D1', '班级')
+            ->setCellValue('E1', '年级')
+            ->setCellValue('F1', '手机号')
+            ->setCellValue('G1', '权限(1超管 2教职工 3普通管理员)');
 
         //设置F列水平居中
         $objPHPExcel->setActiveSheetIndex(0)->getStyle('E')->getAlignment()
@@ -244,25 +302,17 @@ class Alladmin extends Common{
         echo "aaa";
         $class = new ClassModel();
         $admin = new AdminModel();
+        $log = array();
         for($i=0;$i<count($list);$i++){
+            $item = $list[$i]['m_id'];
+            $log[] = $item;
             $objPHPExcel->getActiveSheet()->setCellValue('A'.($i+2),$i+1);
-            $objPHPExcel->getActiveSheet()->setCellValue('B'.($i+2),$list[$i]['a_id']);
-            $objPHPExcel->getActiveSheet()->setCellValue('C'.($i+2),$list[$i]['a_name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('D'.($i+2),$list[$i]['a_place']);
-            $objPHPExcel->getActiveSheet()->setCellValue('E'.($i+2),$list[$i]['a_content']);
-            $objPHPExcel->getActiveSheet()->setCellValue('F'.($i+2),$list[$i]['a_label']);
-            $objPHPExcel->getActiveSheet()->setCellValue('G'.($i+2),$list[$i]['a_create_time']);
-            $objPHPExcel->getActiveSheet()->setCellValue('H'.($i+2),$list[$i]['a_start_time']);
-            $objPHPExcel->getActiveSheet()->setCellValue('I'.($i+2),$list[$i]['a_end_time']);
-            $objPHPExcel->getActiveSheet()->setCellValue('J'.($i+2),$list[$i]['a_grade']);
-            $objPHPExcel->getActiveSheet()->setCellValue('K'.($i+2),$class->getClassById($list[$i]['a_class_id'])['c_name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('L'.($i+2),$admin->getNameByNum($list[$i]['a_creator'])['m_name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('M'.($i+2),$list[$i]['a_creator']);
-            $objPHPExcel->getActiveSheet()->setCellValue('N'.($i+2),$list[$i]['a2s_stu_name']);
-            $objPHPExcel->getActiveSheet()->setCellValue('O'.($i+2),$list[$i]['a2s_stu_num']);
-            $objPHPExcel->getActiveSheet()->setCellValue('P'.($i+2),$list[$i]['a_start_sign']);
-            $objPHPExcel->getActiveSheet()->setCellValue('Q'.($i+2),$list[$i]['a_end_sign']);
-            $objPHPExcel->getActiveSheet()->setCellValue('R'.($i+2),$list[$i]['a2s_sign_time']);
+            $objPHPExcel->getActiveSheet()->setCellValue('B'.($i+2),$list[$i]['m_id']);
+            $objPHPExcel->getActiveSheet()->setCellValue('C'.($i+2),$list[$i]['m_name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('D'.($i+2),$class->getClassById($list[$i]['m_class_id'])['c_name']);
+            $objPHPExcel->getActiveSheet()->setCellValue('E'.($i+2),$list[$i]['m_grade']);
+            $objPHPExcel->getActiveSheet()->setCellValue('F'.($i+2),$list[$i]['m_telephone']);
+            $objPHPExcel->getActiveSheet()->setCellValue('G'.($i+2),$list[$i]['m_privilege']);
 
         }
         //7.设置保存的Excel表格名称
@@ -280,6 +330,20 @@ class Alladmin extends Common{
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         //下载文件在浏览器窗口
         $objWriter->save('php://output');
+
+        $model = new LogModel();
+        $uid = Session::get('admin_id'); // 操作人主键id，非学号
+        $type = 5;
+        $table = 'manage_info';
+        $field = $log;
+        $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+        if($ret) {
+            echo "导出成功, 日志记录成功！";
+            //$this->success('导出成功, 日志记录成功！');
+        }else{
+            echo "导出成功, 日志记录失败！";
+            //$this->error('导出成功, 日志记录失败！');
+        }
         exit;
     }
 }

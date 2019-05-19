@@ -7,9 +7,11 @@
             <div class="col-xl-12">
                 <div class="card">
                     <div class="card-body">
+                        {if condition="$userInfo['m_privilege'] < 3"}
                         <h4 class="box-title">
                             <button type="submit" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addLabel">添加标签</button>
                         </h4>
+                        {/if}
                     </div>
                     <div class="card-body--">
                         <div class="table-stats">

@@ -22,10 +22,9 @@ class Classact extends Common{
         $class = new ClassModel();
         $label = new LabelModel();
 
-        // 获取某个班创建的活动
-        $year = 2018;
-        $cid = 1;
-        $info = $act->getActByClassId($year,$cid);
+        $cid = $admin->getClassId(Session::get('admin_id'));
+
+        $info = $act->getActByClassId($cid['m_class_id']);
 
         foreach ($info as $key => $value) {
             $info[$key]['creator'] = '';
@@ -42,14 +41,20 @@ class Classact extends Common{
         }
 
         $this->assign('info',$info);
+        $this->assign('admin_id',Session::get('admin_id'));
 
         $labelinfo = $label->getAllLabel();
         if($labelinfo){
             $this->assign('labelinfo', $labelinfo);
         }
 
+        $classinfo = $class->getAllClass();
+        if($classinfo){
+            $this->assign('classinfo', $classinfo);
+        }
+
         // 获取当前用户的姓名和和班级信息传给前端
-        $userInfo = $admin->getInfoByNum(1801220025);
+        $userInfo = $admin->getInfoByNum(Session::get('admin_id'));
         if($userInfo){
             $this->assign('userInfo', $userInfo);
         }
@@ -60,25 +65,23 @@ class Classact extends Common{
     public function addAct(){
         $data = input('post.');
         dump($data);
+
         if (empty($data['a_name'])||empty($data['a_content'])||empty($data['a_start_time'])
             ||empty($data['a_end_time'])){
             $this->error('输入不可为空');
         }
 
+        // 判断管理员是否存在
         $admin = new AdminModel();
-        $ret = $admin->getInfoByNum(1801220025);
+        $ret = $admin->getInfoByNum(Session::get('admin_id'));
         if(!$ret){
-            $this->error('添加失败');
+            $this->error('非法用户');
         }
 
         $data['a_creator'] = $ret['m_id'];
-        $data['a_class_id'] = $ret['m_class_id'];
-        $data['a_grade'] = $ret['m_grade'];
+        //$data['a_class_id'] = $ret['m_class_id'];
+        //$data['a_grade'] = $ret['m_grade'];
         $data['a_is_delete'] = 0;
-
-        $act = new ActivityModel();
-        // 添加活动并返回主键
-        $aid = $act->addAct($data);
         
         $act = new ActivityModel();
         // 添加活动并返回主键
@@ -88,24 +91,27 @@ class Classact extends Common{
             $model = new LogModel();
             $uid = Session::get('admin_id'); // 操作人主键id，非学号
             $type = 2;
-            $table = 'user_info';
+            $table = 'activity_info';
             $field = [$aid]; // 增加的主键列表，不是学号
-            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
-
-        }else{
-            $this->error('添加失败');
-        }
-
-        $label = new LabelModel();
-        if ($aid){
-            $ret = $label->editLabelByActId($aid,$data['add_label_id_list']);
-            if($ret){
-                $this->success('添加成功');
-                return;
+            $ret = $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+            if (!$ret) {
+                echo "添加成功,日志记录失败！";
+                //$this->error('添加成功,日志记录失败！');
+            } else {
+                echo "添加成功,日志记录成功！";
+                //$this->success('添加成功,日志记录成功！');
             }
-        }
 
-        $this->error('添加失败');
+            $label = new LabelModel();
+            $ret = $label->editLabelByActId($aid,$data['add_label_id_list']);
+            if(!$ret){
+                $this->error('添加活动成功，添加标签失败！');
+            }else{
+                $this->seccess('添加活动成功，添加标签成功！');
+            }
+        }else{
+            $this->error('添加活动失败');
+        }
     }
 
     public function startSign(){
@@ -137,29 +143,88 @@ class Classact extends Common{
         $act = new ActivityModel();
         $ret = $act->delAct($data);
         if($ret){
-            
             $model = new LogModel();
             $uid = Session::get('admin_id');; // 操作人主键id，非学号
             $type = 4;
-            $table = 'user_info';
-            $field = [$uid]; // 删除的主键列表, 不是学号
-            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
-
-            $this->success('删除成功！');
+            $table = 'activity_info';
+            $field = [$data['a_id'] => ['a_is_delete' => [0, 1]]]; // 删除的主键列表, 不是学号
+            $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+            if (!$ret) {
+                $this->error('删除成功,日志记录失败！');
+            } else {
+                $this->success('删除成功,日志记录成功！');
+            }
         }else{
             $this->error('删除失败！');
         }
+    }
+
+    public function editLogJson($old, $new){
+        $log = array();
+
+        //dump($old);
+        //dump($new);
+        if($new['a_name'] != $old['a_name']){
+            $item = ['a_name' => [$old['a_name'], $new['a_name']]];
+            $log[] = $item;
+        }
+        if($new['a_content'] != $old['a_content']){
+            $item = ['a_content' => [$old['a_content'], $new['a_content']]];
+            $log[] = $item;
+        }
+        if($new['a_place'] != $old['a_place']){
+            $item = ['a_place' => [$old['a_place'], $new['a_place']]];
+            $log[] = $item;
+        }
+        if($new['a_grade'] != $old['a_grade']){
+            $item = ['a_grade' => [$old['a_grade'], $new['a_grade']]];
+            $log[] = $item;
+        }
+        if($new['a_class_id'] != $old['a_class_id']){
+            $item = ['a_class_id' => [$old['a_class_id'], $new['a_class_id']]];
+            $log[] = $item;
+        }
+        if($new['a_start_time'] != $old['a_start_time']){
+            $item = ['a_start_time' => [$old['a_start_time'], $new['a_start_time']]];
+            $log[] = $item;
+        }
+        if($new['a_end_time'] != $old['a_end_time']){
+            $item = ['a_end_time' => [$old['a_end_time'], $new['a_end_time']]];
+            $log[] = $item;
+        }
+        return $log;
     }
 
     public function editAct(){
         $data = input('post.');
         $label = new LabelModel();
 
+        //dump($data);
         // 未传入标签列表，则删除所有标签
+        // 需要记录日志
         if(!isset($data['edit_label_id_list'])){
             $ret = $label->delLabelByActId($data['a_id']);
-            if(!$ret)
-                $this->error('删除标签失败！');
+            if($ret) {
+                $pk = $label->getPkListByActId($data['a_id']);
+                $log = array();
+                foreach ($pk as $key => $value) {
+                    $item = [$pk[$key]['a2l_id']];
+                    $log = $item;
+                }
+                $model = new LogModel();
+                $uid = Session::get('admin_id'); // 操作人主键id，非学号
+                $type = 4;
+                $table = 'act2label';
+                $field = [$log];
+                $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+                if(!$ret) {
+                    echo "日志记录失败！";
+                    //$this->error('编辑成功, 日志记录失败');
+                }
+            }else {
+                echo "删除活动的所有标签失败！";
+                //$this->error('删除标签失败！');
+            }
         }
 
         $ret = $label->editLabelByActId($data['a_id'],trim($data['edit_label_id_list']));
@@ -169,46 +234,52 @@ class Classact extends Common{
 
         // 获取创建人详细信息插入到数据库
         $admin = new AdminModel();
-        $ret = $admin->getInfoByNum(1801220025);
+        $ret = $admin->getInfoByNum(Session::get('admin_id'));
         if(!$ret){
             $this->error('添加失败');
         }
-        $data['a_creator'] = $ret['m_id'];
-        $data['a_class_id'] = $ret['m_class_id'];
-        $data['a_grade'] = $ret['m_grade'];
+        $data['a_creator'] = Session::get('admin_id');
+        //$data['a_class_id'] = $ret['m_class_id'];
+        //$data['a_grade'] = $ret['m_grade']; 接收传下来的年级，2018级的学生可以下发2019的
         $data['a_is_delete'] = 0;
 
         $act = new ActivityModel();
-        $ret = $act->editAct($data);
-        if($ret){
-            
-            $model = new LogModel();
-            $uid = $uid = Session::get('admin_id'); // 操作人主键id，非学号
-            $type = 3;
-            $table = 'user_info';
-            $field = [
-            '22'=>[
-            'field1'=> ['before value', 'after value'], 
-            'field2'=> ['before value', 'after value']
-            ],
-            '23'=>[
-            'field1'=> ['before value', 'after value'], 
-            'field2'=> ['before value', 'after value']
-            ]
-            ];
-            $model->recordLogApi ($uid, $type, $table, $field); //需要判断调用是否成功
+        $old = $act->getActByActId($data['a_id']);
+        $logJson = $this->editLogJson($old,$data);
 
-            $this->success('编辑成功！');
+        if($logJson) {
+            //dump($logJson);
+            $ret = $act->editAct($data);
+            if ($ret) {
+                $model = new LogModel();
+                $uid = Session::get('admin_id'); // 操作人主键id，非学号
+                $type = 3;
+                $table = 'activity_info';
+                $field = [
+                    $data['a_id'] => $logJson
+                ];
+                $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+                if($ret) {
+                    $this->success('编辑成功, 日志记录成功');
+                }else{
+                    $this->error('编辑成功, 日志记录失败');
+                }
+            } else {
+                $this->error('编辑失败！');
+            }
+            return;
         }else{
-            $this->error('编辑失败！');
+            $this->error('未做任何修改！');
         }
     }
 
     public function export(){
         //1.从数据库中取出数据
         echo "ddd";
+        $admin = new AdminModel();
+        $cid = $admin->getClassId(Session::get('admin_id'));
         $act = new ActivityModel();
-        $list = $act->getActByClassId(2018, 1);
+        $list = $act->getActByClassId($cid['m_class_id']);
         echo "aaa";
         //2.加载PHPExcle类库
         vendor('PHPExcel.PHPExcel');
@@ -243,7 +314,10 @@ class Classact extends Common{
         echo "aaa";
         $class = new ClassModel();
         $admin = new AdminModel();
+        $log = array();
         for($i=0;$i<count($list);$i++){
+            $item = $list[$i]['a_id'];
+            $log[] = $item;
             $objPHPExcel->getActiveSheet()->setCellValue('A'.($i+2),$i+1);
             $objPHPExcel->getActiveSheet()->setCellValue('B'.($i+2),$list[$i]['a_id']);
             $objPHPExcel->getActiveSheet()->setCellValue('C'.($i+2),$list[$i]['a_name']);
@@ -276,6 +350,20 @@ class Classact extends Common{
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         //下载文件在浏览器窗口
         $objWriter->save('php://output');
+
+        $model = new LogModel();
+        $uid = Session::get('admin_id'); // 操作人主键id，非学号
+        $type = 5;
+        $table = 'activity_info';
+        $field = $log;
+        $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+        if($ret) {
+            echo "导出成功, 日志记录成功！";
+            //$this->success('导出成功, 日志记录成功！');
+        }else{
+            echo "导出成功, 日志记录失败！";
+            //$this->error('导出成功, 日志记录失败！');
+        }
         exit;
     }
 }

@@ -38,12 +38,14 @@
                                     <td>  <span class="product">{$list.privilege}</span> </td>
                                     <td>  <span class="product">{$list.m_password}</span> </td>
                                     <td>
+                                        {if condition="$list.m_id == $admin_id"}
                                         <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal" data-target="#editAdmin">
                                             <i class="fa fa-magic"></i>&nbsp;编辑
                                         </button>
                                         <button type="button" class="btn btn-danger btn-sm mb-1" data-toggle="modal" data-target="#delAdmin">
                                             <i class="fa fa-exclamation"></i>&nbsp;删除
                                         </button>
+                                        {/if}
                                     </td>
                                 </tr>
                                 {/volist}
@@ -54,113 +56,6 @@
                     </div>
                 </div>
             </div>
-
-            <!--添加管理员-->
-            <form action="addAdmin" method="post">
-                <div class="modal fade" id="addAdmin" tabindex="-1" role="dialog" aria-labelledby="smallmodalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-sm" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="addmodalLabel">添加管理员</h5>
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <p>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                        <input type="text" id="add_m_id" name="m_id" placeholder="学号" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-credit-card"></i>
-                                        </div>
-                                        <input type="text" id="add_m_name" name="m_name" placeholder="姓名" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-group"></i>
-                                        </div>
-                                        <select id="add_m_class_id" name="m_class_id" class="form-control">
-                                            {volist name='classinfo' id='list'}
-                                            <option value={$list.c_id}>{$list.c_name}</option>
-                                            {/volist}
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-group"></i>
-                                        </div>
-                                        <select id="add_m_grade" name="m_grade" class="form-control">
-                                            <option value="2015">2015</option>
-                                            <option value="2016">2016</option>
-                                            <option value="2017">2017</option>
-                                            <option value="2018">2018</option>
-                                            <option value="2019">2019</option>
-                                            <option value="2020">2020</option>
-                                            <option value="2021">2021</option>
-                                            <option value="2022">2022</option>
-                                            <option value="2023">2023</option>
-                                            <option value="2024">2024</option>
-                                            <option value="2025">2025</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                        <input type="text" id="add_m_telephone" name="m_telephone" placeholder="手机号,用于找回密码" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-group"></i>
-                                        </div>
-                                        <select id="add_m_privilege" name="m_privilege" class="form-control">
-                                            <option value=2>教职工</option>
-                                            <option value=3>普通管理员</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                        <input type="password" id="add_m_password1" name="m_password1" placeholder="密码6-18位:A-z,0-9,英文符号" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
-                                        </div>
-                                        <input type="password" id="add_m_password2" name="m_password2" placeholder="确认密码:A-z,0-9,英文符号" class="form-control">
-                                    </div>
-                                </div>
-                                </p>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                <button type="submit" class="btn btn-success" id="confirmadd">确认</button></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
 
             <!--编辑管理员-->
             <form action="editAdmin" method="post">
@@ -181,15 +76,15 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_m_num" name="m_num" placeholder="学号" class="form-control" disabled="disabled">
+                                        <input type="text" id="edit_m_num" name="m_num" placeholder="学号" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
-                                            <i class="fa fa-credit-card"></i>
+                                            <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_m_name" name="m_name" placeholder="姓名" class="form-control" disabled="disabled">
+                                        <input type="text" id="edit_m_name" name="m_name" placeholder="姓名" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -224,15 +119,15 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!--div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_m_telephone" name="m_telephone" placeholder="手机号" class="form-control" disabled="disabled">
+                                        <input type="text" id="edit_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
                                     </div>
-                                </div>
-                                <div class="form-group">
+                                </div-->
+                                <!--div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
@@ -250,7 +145,7 @@
                                         </div>
                                         <input type="text" id="edit_m_password" name="m_password" placeholder="密码" class="form-control" disabled="disabled">
                                     </div>
-                                </div>
+                                </div-->
                                 </p>
                             </div>
                             <div class="modal-footer">
@@ -363,13 +258,13 @@
         //var m_num = btnThis.closest('tr').data('id');
         var m_num = btnThis.closest('tr').find('td').eq(1).data('id'); // m_id 和 m_num相同，都是主键，活动ID
         var m_name = btnThis.closest('tr').find('td').eq(2).text();
-        var m_class_id = btnThis.closest('tr').find('td').eq(3).text();
+        //var m_class_id = btnThis.closest('tr').find('td').eq(3).text();
         var m_grade = btnThis.closest('tr').find('td').eq(4).data('id');
         var m_telephone = btnThis.closest('tr').find('td').eq(5).data('id');
         //var m_privilege = btnThis.closest('tr').find('td').eq(6).text();
         var m_password = btnThis.closest('tr').find('td').eq(7).text();
         modal.find('#edit_m_name').val(m_name);
-        modal.find('#edit_m_class_id').val(m_class_id);
+        //modal.find('#edit_m_class_id').val(m_class_id);
         modal.find('#edit_m_grade').val(m_grade);
         modal.find('#edit_m_telephone').val(m_telephone);
         //modal.find('#edit_m_privilege').val(m_privilege);

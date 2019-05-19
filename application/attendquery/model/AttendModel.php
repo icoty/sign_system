@@ -32,13 +32,12 @@ class AttendModel extends Model
      * $year 年级
      * return list
      */
-    public function getClassActAttend($year, $cid){
+    public function getClassActAttend($cid){
         $list = DB::table('act2stu')
             ->alias('s')
             ->join('activity_info a', 's.a2s_act_id = a.a_id')
             ->where('s.a2s_is_delete',0)
             ->where('a.a_is_delete',0)
-            ->where('a.a_grade',$year)
             ->where('a.a_class_id',$cid)
             ->order("s.a2s_create_time desc")
             ->select();

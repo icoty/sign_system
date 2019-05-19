@@ -161,6 +161,9 @@ class Log extends Model
      * 4删除：需要传入$uid, $type, $table, $field(该字段传入你删除的所有数据的主键，如 $field = ['11'，'12'])
      */
     public function recordLogApi($uid, $type, $table = '', $action = ''){
+        if($type != 1 && $type != 2 && $type != 3 && $type != 4 && $type != 5)
+            return 0;
+
         $client = new ClientInfo();
         $ip = $client->getIp();
         $os = $client->GetOS();

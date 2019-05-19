@@ -5,6 +5,7 @@ use think\Cookie;
 use think\Model;
 use think\Session;
 use think\Db;
+use app\login\model\Sha;
 
 class AdminInfo extends Model
 {
@@ -54,7 +55,14 @@ class AdminInfo extends Model
         if ($admin['m_is_delete'] == 1) {
             return 4; // 帳戶狀態失效
         }
-        if ($admin['m_password'] == md5($password)) {
+
+        $sha = new Sha();
+        $adminModel = new AdminModel();
+        $salt = $adminModel->getSaltByNum($username)['m_salt'];
+        $salt .= $password;
+
+        $pwd = $sha->sha256($salt);
+        if ($admin['m_password'] == $pwd) {
             // 紀錄 session 和 cookie
             Session::set('admin_id', $admin['m_id']);
             Session::set('admin_name', $admin['m_name']);

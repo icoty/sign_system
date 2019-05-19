@@ -8,9 +8,11 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="box-title">
+                            {if condition="$userInfo['m_privilege'] < 3"}
                             <button type="submit" style="height:36px;margin-bottom:10px;" class="btn btn-success btn-sm" data-toggle="modal" data-target="#addAdmin">添加管理员</button>
                             <input type="button" style="height:36px;margin-bottom:10px;" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'Alladmin/export\')}'" value="导出所有到Excel">
                             <br>
+                            {/if}
                             <!--<button id="importShow" type="submit" class="btn btn-success btn-sm" style="height:36px;" >Excel导入格式: 学号, 姓名, 班级ID, 手机号, 年级, 权限, 默认密码</button>
                             <form id="importAdd" action="importByExcel" enctype="multipart/form-data" method="post" style="display: none">
                                 <input type="file" class="btn btn-success btn-sm" name="file"/>
@@ -35,6 +37,8 @@
                                     <th>操作</th>
                                 </tr>
                                 </thead>
+
+                                {if condition="$userInfo['m_privilege'] < 3"}
                                 <tbody>
                                 {volist name='info' id='list'}
                                 <tr data-id={$list.m_id}>
@@ -58,6 +62,7 @@
                                 {/volist}
 
                                 </tbody>
+                                {/if}
                             </table>
                         </div>
                     </div>
@@ -164,7 +169,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-                                <button type="submit" class="btn btn-success" id="confirmadd">确认</button></a>
+                                <button type="submit" class="btn btn-success" id="confirmadd" >确认</button></a>
                             </div>
                         </div>
                     </div>
@@ -190,15 +195,15 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_m_num" name="m_num" placeholder="学号" class="form-control" disabled="disabled">
+                                        <input type="text" id="edit_m_num" name="m_num" placeholder="学号/教职工号" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
-                                            <i class="fa fa-credit-card"></i>
+                                            <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_m_name" name="m_name" placeholder="姓名" class="form-control" disabled="disabled">
+                                        <input type="text" id="edit_m_name" name="m_name" style="text-align:left;" placeholder="姓名" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -233,14 +238,14 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!--div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="edit_m_telephone" name="m_telephone" placeholder="手机号" class="form-control" disabled="disabled">
+                                        <input type="text" id="edit_m_telephone" name="m_telephone" placeholder="手机号" class="form-control">
                                     </div>
-                                </div>
+                                </div-->
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
@@ -252,14 +257,14 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!--div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
                                         <input type="text" id="edit_m_password" name="m_password" placeholder="密码" class="form-control" disabled="disabled">
                                     </div>
-                                </div>
+                                </div-->
                                 </p>
                             </div>
                             <div class="modal-footer">
@@ -357,10 +362,27 @@
     </div>
     <!-- .animated -->
 </div>
+
+<script src="__STATIC__/assets/js/lib/sha256/sha256.js"></script>
+
 <!-- /.content -->
 {/block}
 
 {block name="scripts"}
+
+<!--添加管理sha256加密-->
+<script type="text/javascript">
+    $("#confirmadd").click(function () {
+        var cb1 = document.getElementById("add_m_password1");
+        var str1 = new String(cb1.value)
+        cb1.value = sha256_digest(str1);
+
+        var cb2 = document.getElementById("add_m_password2");
+        var str2 = new String(cb2.value)
+        cb2.value = sha256_digest(str2);
+    });
+
+</script>
 
 <!--编辑管理员-->
 <script type="text/javascript">
@@ -372,15 +394,15 @@
         //var m_num = btnThis.closest('tr').data('id');
         var m_num = btnThis.closest('tr').find('td').eq(1).data('id'); // m_id 和 m_num相同，都是主键，活动ID
         var m_name = btnThis.closest('tr').find('td').eq(2).text();
-        var m_class_id = btnThis.closest('tr').find('td').eq(3).text();
+        //var m_class_id = btnThis.closest('tr').find('td').eq(3).text();
         var m_grade = btnThis.closest('tr').find('td').eq(4).data('id');
-        var m_telephone = btnThis.closest('tr').find('td').eq(5).data('id');
+        //var m_telephone = btnThis.closest('tr').find('td').eq(5).data('id');
         //var m_privilege = btnThis.closest('tr').find('td').eq(6).text();
         var m_password = btnThis.closest('tr').find('td').eq(7).text();
         modal.find('#edit_m_name').val(m_name);
-        modal.find('#edit_m_class_id').val(m_class_id);
+        //modal.find('#edit_m_class_id').val(m_class_id);
         modal.find('#edit_m_grade').val(m_grade);
-        modal.find('#edit_m_telephone').val(m_telephone);
+        //modal.find('#edit_m_telephone').val(m_telephone); // 此处不提供编辑，用户自己绑定
         //modal.find('#edit_m_privilege').val(m_privilege);
         modal.find('#edit_m_password').val(m_password);
         modal.find('#edit_m_id').val(m_id);
@@ -428,5 +450,6 @@
         }
     });
 </script>
+
 
 {/block}

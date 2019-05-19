@@ -26,6 +26,8 @@ class AllLog extends Common
                 $info[$key]['type'] = '修改';
             }elseif ($info[$key]['lg_type'] == 4){
                 $info[$key]['type'] = '删除';
+            }elseif ($info[$key]['lg_type'] == 5){
+                $info[$key]['type'] = '导出';
             }
         }
 

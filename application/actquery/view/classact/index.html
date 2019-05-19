@@ -49,7 +49,7 @@
                                     <td><span class="product">{$list.a_end_time}</span></td>
                                     <td><span class="product">{$list.a_label}</span></td>
                                     <td>
-                                        {if condition="$list.a_creator == 1801220025"}
+                                        {if condition="$list.a_creator == $admin_id"}
                                         <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal"
                                                 data-target="#editAct">
                                             <i class="fa fa-magic"></i>&nbsp;编辑
@@ -95,14 +95,14 @@
                                         <input type="text" id="add_a_name" name="a_name" placeholder="活动名称" class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!--div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
                                         <input type="text" id="add_a_creator" name="a_creator" placeholder={$userInfo['m_name']} class="form-control" disabled="disabled">
                                     </div>
-                                </div>
+                                </div-->
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
@@ -119,12 +119,13 @@
                                         <input type="text" id="add_a_place" name="a_place" placeholder="活动地点" class="form-control">
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
                                         </div>
-                                        <select id="add_a_grade" name="a_grade" placeholder="年级" class="form-control" disabled="disabled">
+                                        <select id="add_a_grade" name="a_grade" placeholder="年级" class="form-control">
                                             <option value="2015">2015</option>
                                             <option value="2016">2016</option>
                                             <option value="2017">2017</option>
@@ -144,9 +145,14 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="add_a_class" name="a_class" placeholder={$userInfo['c_name']} class="form-control" disabled="disabled">
+                                        <select name="a_class_id" id="add_a_class_id" class="form-control">
+                                            {volist name='classinfo' id='list'}
+                                            <option value={$list.c_id}>{$list.c_name}</option>
+                                            {/volist}
+                                        </select>
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
@@ -165,9 +171,6 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-group"></i>
-                                        </div>
                                         {volist name='labelinfo' id='list'}
                                         <input type="checkbox" id="add_a_label" name="add_label_id_list" lname={$list.l_name} value={$list.l_id} />{$list.l_name}
                                         {/volist}
@@ -214,14 +217,14 @@
                                         <input type="text" id="edit_a_name" name="a_name" placeholder="活动名称" class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!--div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
                                         <input type="text" id="edit_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled">
                                     </div>
-                                </div>
+                                </div-->
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
@@ -243,7 +246,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-group"></i>
                                         </div>
-                                        <select id="edit_a_grade" name="a_grade" placeholder="年级" class="form-control" disabled="disabled">
+                                        <select id="edit_a_grade" name="a_grade" placeholder="年级" class="form-control">
                                             <option value="2015">2015</option>
                                             <option value="2016">2016</option>
                                             <option value="2017">2017</option>
@@ -261,9 +264,13 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
+                                            <i class="fa fa-group"></i>
                                         </div>
-                                        <input type="text" id="edit_a_class" name="a_class" placeholder="班级名称" class="form-control" disabled="disabled">
+                                        <select id="edit_a_class_id" name="a_class_id" class="form-control">
+                                            {volist name='classinfo' id='list'}
+                                            <option value={$list.c_id}>{$list.c_name}</option>
+                                            {/volist}
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -284,9 +291,6 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-group"></i>
-                                        </div>
                                         {volist name='labelinfo' id='list'}
                                         <input type="checkbox" id="edit_a_label" name="edit_label_id_list" lname={$list.l_name} value={$list.l_id} />{$list.l_name}
                                         {/volist}
@@ -382,7 +386,7 @@
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
-                                        <input type="text" id="del_a_class" name="a_class" placeholder="班级名称" class="form-control" disabled="disabled">
+                                        <input type="text" id="del_a_class_id" name="a_class_id" placeholder="班级名称" class="form-control" disabled="disabled">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -403,9 +407,6 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-user"></i>
-                                        </div>
                                         {volist name='labelinfo' id='list'}
                                         <input type="checkbox" id="del_a_label" name="del_label_id_list" lname={$list.l_name} value={$list.l_id} disabled="disabled" />{$list.l_name}
                                         {/volist}
@@ -452,14 +453,14 @@
                                         <input type="text" id="sign_a_name" name="a_name" placeholder="活动名称" class="form-control">
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!--div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <i class="fa fa-user"></i>
                                         </div>
                                         <input type="text" id="sign_a_creator" name="a_creator" placeholder="创建人" class="form-control" disabled="disabled">
                                     </div>
-                                </div>
+                                </div-->
                                 <div class="form-group">
                                     <div class="input-group">
                                         <div class="input-group-addon">
@@ -547,7 +548,7 @@
         var a_content = btnThis.closest('tr').find('td').eq(4).text();
         var a_place = btnThis.closest('tr').find('td').eq(5).text();
         var a_grade = btnThis.closest('tr').find('td').eq(6).data('id');
-        var a_class = btnThis.closest('tr').find('td').eq(7).text();
+        var a_class_id = btnThis.closest('tr').find('td').eq(7).text();
         var a_start_time = btnThis.closest('tr').find('td').eq(8).text();
         var a_end_time = btnThis.closest('tr').find('td').eq(9).text();
         var a_label = btnThis.closest('tr').find('td').eq(10).text();
@@ -556,7 +557,7 @@
         modal.find('#edit_a_content').val(a_content);
         modal.find('#edit_a_place').val(a_place);
         modal.find('#edit_a_grade').val(a_grade);
-        modal.find('#edit_a_class').val(a_class);
+        //modal.find('#edit_a_class').val(a_class); // 这里需要传入班级ID，a_class是班级名称
         modal.find('#edit_a_start_time').val(a_start_time);
         modal.find('#edit_a_end_time').val(a_end_time);
         modal.find('#edit_a_id').val(a_id);
@@ -574,6 +575,9 @@
                     cb[j].checked = true;
             }
         }
+        console.log(strs);
+        //var cbb = document.getElementsByName("edit_label_id_list");
+        //console.log(cbb)
     });
 
     // 获取所有选中的标签ID，用空格隔开传给控制器

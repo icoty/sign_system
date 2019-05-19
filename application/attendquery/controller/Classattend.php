@@ -22,7 +22,8 @@ class Classattend extends Common{
         $class = new ClassModel();
         $admin = new AdminModel();
 
-        $info = $att->getAllActAttend();
+        $cid = $admin->getClassId(Session::get('admin_id'));
+        $info = $att->getClassActAttend($cid['m_class_id']);
         foreach ($info as $key => $value) {
             $info[$key]['a_class'] = '';
             $info[$key]['a_creator_name'] = '';
@@ -36,6 +37,7 @@ class Classattend extends Common{
             }
         }
         $this->assign('info',$info);
+        $this->assign('admin_id',Session::get('admin_id'));
 
         return $this->fetch();
     }
@@ -115,7 +117,10 @@ class Classattend extends Common{
         echo "ddd";
         $attend = new AttendModel();
         // to do
-        $list = $attend->getClassActAttend(2018,1);
+
+        $admin = new AdminModel();
+        $cid = $admin->getClassId(Session::get('admin_id'));
+        $list = $attend->getClassActAttend($cid['m_class_id']);
         echo "aaa";
         //2.加载PHPExcle类库
         vendor('PHPExcel.PHPExcel');
@@ -154,7 +159,10 @@ class Classattend extends Common{
         echo "aaa";
         $class = new ClassModel();
         $admin = new AdminModel();
+        $log = array();
         for($i=0;$i<count($list);$i++){
+            $item = $list[$i]['a2s_id'];
+            $log[] = $item;
             $objPHPExcel->getActiveSheet()->setCellValue('A'.($i+2),$i+1);
             $objPHPExcel->getActiveSheet()->setCellValue('B'.($i+2),$list[$i]['a_id']);
             $objPHPExcel->getActiveSheet()->setCellValue('C'.($i+2),$list[$i]['a_name']);
@@ -190,6 +198,90 @@ class Classattend extends Common{
         $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
         //下载文件在浏览器窗口
         $objWriter->save('php://output');
+
+        $model = new LogModel();
+        $uid = Session::get('admin_id'); // 操作人主键id，非学号
+        $type = 5;
+        $table = 'act2stu';
+        $field = $log;
+        $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+        if($ret) {
+            echo "导出成功, 日志记录成功！";
+            //$this->success('导出成功, 日志记录成功！');
+        }else{
+            echo "导出成功, 日志记录失败！";
+            //$this->error('导出成功, 日志记录失败！');
+        }
         exit;
+    }
+
+
+    public function importByExcel()
+    {
+        //dump($_FILES);
+        if(empty($_FILES['file']['name'])) {
+            $this->error('输入不可为空');
+        }
+
+        $format = explode(".", $_FILES['file']['name']);  // 新传入的标签用于更新
+        if($format[count($format) - 1] == 'xlsx'){
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xlsx();
+        }else if($format[count($format) - 1] == 'xls'){
+            $reader = new \PhpOffice\PhpSpreadsheet\Reader\Xls();
+        }else{
+            $this->error('文件格式错误,必须为Excel,文件后缀为.xls或.xlsx');
+        }
+
+        try {
+            $spreadsheet = $reader->load($_FILES['file']['tmp_name']);
+        } catch (\PhpOffice\PhpSpreadsheet\Reader\Exception $e) {
+            die($e->getMessage());
+        }
+
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $sqlData = array();
+
+        $att = new AttendModel();
+        foreach ($sheet->getRowIterator(2) as $row) {
+            $tmp = array();
+            foreach ($row->getCellIterator() as $cell) {
+                $tmp[] = $cell->getFormattedValue();
+            }
+            $ret = $att->signIsExist((int)$tmp[0],(int)$tmp[2]);
+            if($ret){
+                $this->error('导入失败! 活动ID:'.$tmp[0].',学号:'.$tmp[2].' 已经存在！');
+            }
+            $tmp = ['a2s_act_id' => (int)$tmp[0],
+                'a2s_stu_name' => $tmp[1],
+                'a2s_stu_num' => (int)$tmp[2],
+                'a2s_sign_time' => $tmp[3],
+                'a2s_is_delete' => 0];
+            //dump($tmp);
+            $sqlData[$row->getRowIndex() - 2] = $tmp;
+        }
+
+        $ret = $att->importAttend($sqlData);
+        if ($ret) {
+            $start = DB::getLastInsID();
+            $log = array();
+            for($i=0; $i<$ret;$i++) {
+                $log[] = $start + $i;
+            }
+
+            $model = new LogModel();
+            $uid = Session::get('admin_id'); // 操作人主键id，非学号
+            $type = 2;
+            $table = 'act2stu';
+            $field = $log;
+            $ret = $model->recordLogApi($uid, $type, $table, $field); //需要判断调用是否成功
+            if($ret) {
+                $this->success("导入成功, 日志记录成功！");
+            }else{
+                $this->error('导入成功, 日志记录失败！');
+            }
+        } else {
+            $this->error('导入失败');
+        }
     }
 }

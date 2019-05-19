@@ -56,7 +56,7 @@ class ClassModel extends Model
 
     /**
      * 杨宇
-     * 功能：判断班级名称 $name是否存在且已经被删除
+     * 功能：判断班级名称 $name是否存在且已经被删除,若存在返回主键
      * @$name 标签名
      * return int
      */
@@ -64,6 +64,7 @@ class ClassModel extends Model
         $ret = Db::table('class_info')
             ->where('c_name',$name)
             ->where('c_is_delete',1)
+            ->field('c_id')
             ->find();
         return $ret;
     }
@@ -91,7 +92,7 @@ class ClassModel extends Model
     public function addClass($name = ''){
         $data = ['c_name' => $name, 'c_is_delete'=> 0];
         $ret = Db::table('class_info')
-            ->insert($data);
+            ->insertGetId($data);
         return $ret;
     }
 

@@ -6,6 +6,37 @@ use app\labelquery\model\LabelModel;
 
 class ActivityModel extends Model
 {
+
+    /**
+     * 杨宇
+     * 功能：获取某班的所有活动
+     * @param
+     * @$cid：班级id 班级格式如：2018未名一苑
+     * return list
+     */
+    public function getActByClassId($cid){
+        $list = DB::table('activity_info')
+            ->where('a_class_id', $cid)
+            ->where('a_is_delete',0)
+            ->select();
+        return $list;
+    }
+
+    /**
+     * 杨宇
+     * 功能：
+     * @param
+     * @$cid：班级id 班级格式如：2018未名一苑
+     * return list
+     */
+    public function getActByActId($id){
+        $list = DB::table('activity_info')
+            ->where('a_id', $id)
+            ->where('a_is_delete',0)
+            ->find();
+        return $list;
+    }
+
     /**
      * 杨宇
      * 功能：获取某管理员创建的所有活动
@@ -16,23 +47,6 @@ class ActivityModel extends Model
     public function getActByNumber($num){
         $list = DB::table('activity_info')
             ->where('a_creator', $num)
-            ->where('a_is_delete',0)
-            ->select();
-        return $list;
-    }
-
-    /**
-     * 杨宇
-     * 功能：获取某个班级创建的活动
-     * @param
-     * @classid：班级id
-     * $year 年级
-     * return list
-     */
-    public function getActByClassId($year, $classid){
-        $list = DB::table('activity_info')
-            ->where('a_class_id', $classid)
-            ->where('a_grade', $year)
             ->where('a_is_delete',0)
             ->select();
         return $list;
@@ -183,7 +197,7 @@ class ActivityModel extends Model
             ->where('a_label',$str)
             ->count();
         if($ret){ // 已经存在不做任何处理
-            dump('a_label not change');
+            //echo "a_label not change";
             return 1;
         }else{
             $ret = Db::table('activity_info')
@@ -262,7 +276,7 @@ class ActivityModel extends Model
         // 获取活动的所有标签名称并拼接为字符串
         $label = new LabelModel();
         $info = $label->getActLabelName($aid);
-        dump($info);
+        //dump($info);
         $str = '';
         foreach ($info as $key => $value) {
             $str = $str.' '.$info[$key]['l_name'];
@@ -272,4 +286,30 @@ class ActivityModel extends Model
         $ret = $this->editActLabelStr($aid,trim($str));
         return $ret;
     }
+
+    public function updateAllActLabelStr(){
+        $list = Db::table('activity_info')
+            ->field('a_id')
+            ->select();
+
+        foreach ($list as $key1 => $value1) {
+            // 获取活动的所有标签名称并拼接为字符串
+            $label = new LabelModel();
+            $aid = $list[$key1]['a_id'];
+            $info = $label->getActLabelName($aid);
+            //dump($info);
+            $str = '';
+            foreach ($info as $key => $value) {
+                $str = $str.' '.$info[$key]['l_name'];
+            }
+
+            //去除首尾空格后更新
+            $ret = $this->editActLabelStr($aid,trim($str));
+            if(!$ret)
+                return 0;
+        }
+
+        return 1;
+    }
+
 }

@@ -8,7 +8,12 @@
                 <div class="card">
                     <div class="card-body">
                         <h4 class="box-title">
-                            <input type="button" class="btn btn-success btn-sm" onclick="window.location.href='{:url(\'ClassAttend/export\')}'" value="导出本苑到Excel">
+                            <input type="button" class="btn btn-success btn-sm" style="height:33px;" onclick="window.location.href='{:url(\'ClassAttend/export\')}'" value="导出本苑到Excel">
+                            <button id="importShow" type="submit" class="btn btn-success btn-sm" style="height:33px;" >导入Excel格式: 活动ID, 姓名, 学号, 签到时间(格式:0000-00-00 00:00:00)</button>
+                            <form id="importAdd" action="importByExcel" enctype="multipart/form-data" method="post" style="display: none">
+                                <input type="file" class="btn btn-success btn-sm" name="file"/>
+                                <input class="btn btn-success btn-sm" type="submit" style="height:33px;" value="上传"/>
+                            </form>
                             <br>
                         </h4>
                     </div>
@@ -28,7 +33,9 @@
                                     <th>组织单位</th>
                                     <th>标签</th>
                                     <th>创建者</th>
+                                    {if condition="0 != 0"}
                                     <th>操作</th>
+                                    {/if}
                                 </tr>
                                 </thead>
 
@@ -45,7 +52,9 @@
                                     <td data-id={$list.a_class}><span class="product">{$list.a_class}</span></td>
                                     <td><span class="product">{$list.a_label}</span></td>
                                     <td><span class="product">{$list.a_creator_name}</span></td>
+                                    {if condition="0 != 0"}
                                     <td>
+                                        {if condition="$list.a_creator == $admin_id"}
                                         <button type="button" class="btn btn-primary btn-sm mb-1" data-toggle="modal"
                                                 data-target="#editAttend">
                                             <i class="fa fa-magic"></i>编辑
@@ -54,7 +63,9 @@
                                                 data-target="#delAttend">
                                             <i class="fa fa-exclamation"></i>&nbsp;删除
                                         </button>
+                                        {/if}
                                     </td>
+                                    {/if}
                                 </tr>
                                 {/volist}
 
@@ -346,6 +357,20 @@
         modal.find('#del_a2s_id').val(a2s_id);
         modal.find('#del_a_label').val(a_label);
         modal.find('#del_a_creator_name').val(a_creator_name);
+    });
+</script>
+
+
+<script>
+    $('#importShow').click(function () {
+        let form = document.getElementById('importAdd');
+        if (form.style.display === 'none') {
+            $('#importShow').text('取消');
+            form.style.display = 'inline';
+        } else {
+            $('#importShow').text('导入Excel格式: 活动ID, 姓名, 学号, 签到时间(格式:0000-00-00 00:00:00)');
+            form.style.display = 'none';
+        }
     });
 </script>
 {/block}
