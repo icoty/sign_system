@@ -262,10 +262,10 @@ https://github.com/icoty/sign_system
 
 ## 参考文献
 
-[1] [thinkPHP5完全开发手册](https://www.kancloud.cn/manual/thinkphp5/135186)
-[2] [PHPExcel](https://github.com/PHPOffice/PHPExcel)
-[3] [phpqrcode](https://github.com/t0k4rt/phpqrcode)
-[4] [mysql数据库设计规范与原则](https://www.cnblogs.com/qlqwjy/p/8425861.html)
-[5] [常用加密算法应用](https://icoty.github.io/2019/05/20/crypt/)
-[6] [html教程](http://www.w3school.com.cn/h.asp)
-[7] [css教程](http://www.w3school.com.cn/css/index.asp)
+[1] [thinkPHP5完全开发手册](https://www.kancloud.cn/manual/thinkphp5/135186)<br>
+[2] [PHPExcel](https://github.com/PHPOffice/PHPExcel)<br>
+[3] [phpqrcode](https://github.com/t0k4rt/phpqrcode)<br>
+[4] [mysql数据库设计规范与原则](https://www.cnblogs.com/qlqwjy/p/8425861.html)<br>
+[5] [常用加密算法应用](https://icoty.github.io/2019/05/20/crypt/)<br>
+[6] [html教程](http://www.w3school.com.cn/h.asp)<br>
+[7] [css教程](http://www.w3school.com.cn/css/index.asp)<br>
