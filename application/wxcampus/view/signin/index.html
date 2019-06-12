@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>活动签到系统</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 微软雅黑;
+        }
+
+        header {
+            height: 60px;
+            line-height: 60px;
+            width: 100%;
+            color: #fff;
+            font-family: "黑体";
+            font-weight: 200;
+            font-size: 20px;
+            /*背景色渐变*/
+            background: linear-gradient(to bottom right, #F56739, #FB9749);
+        }
+
+        #content {
+            margin-bottom:30%
+            /*background: linear-gradient(to bottom right, #f5f454, #fbd1b7);*/
+        }
+
+        .menu {
+            display: block;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            color: #474747;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .subMenu {
+            width: 33%;
+            float: left;
+            cursor: pointer;
+        }
+
+        .menu_name {
+            height: 30px;
+            width: 100%;
+            line-height: 30px;
+        }
+
+        img.menu_img {
+            height: 24px;
+            width: 24px;
+        }
+
+        img {
+            vertical-align: middle;
+            border: 0;
+        }
+
+        .active {
+            color: #FFA129;
+        }
+
+        .text-center {
+            text-align: center
+        }
+
+        .nav {
+            width: 100%;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            height: 70px;
+            color: #474747;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+        .nav ul {
+            height: 0px;
+        }
+        .nav ul li {
+            float: left;
+            width: 33%;
+            text-align: center;
+            list-style-type: none;
+            margin: 0px;
+            padding: 0px;
+        }
+        .nav ul li span {
+            display: block;
+            color: #000;
+            font-size: 16px;
+            font-family: "微软雅黑";
+            line-height: 26px;
+        }
+        a {
+            color: #000;
+            text-decoration: none;
+        }
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            font-weight: normal;
+        }
+        video {
+            display: block;
+            margin: 0 auto;
+            width: 240px;
+            height: 240px;
+            background: #000;
+            border-radius: 5px;
+        }
+
+    </style>
+<!--     <script src="../../../../public/static/wx/js/qrscan.js"></script> -->
+</head>
+<body onload="initSize()" onresize="initSize()">
+<!--top-->
+<header class="text-center">活动签到系统</header>
+<!--content-->
+<div id="content">
+<a href="http://sao315.com/w/api/saoyisao?redirect_uri=http://45.40.199.171:8080/application/wx/view/signin/get_third_party_result.html">
+    <button>扫描二维码</button>
+</a>
+<script>
+// if (location.href.indexOf("qrresult=")>-1)
+//     alert(location.href.split("qrresult=")[1]); //在您的程序中可对此数据进行处理
+</script>
+
+    
+</div>
+
+<!--bottom-->
+<div class="nav">
+            <ul>
+                <li>
+                    <a href="../home/index.html"><span><img src="../../../../public/static/wx/images/icon_tabbar.png" height="25"></span><span>活动记录</span></a>
+                </li>
+                <li>
+                    <a href="#"><span><img src="../../../../public/static/wx/images/icon_tabbar_active.png" height="25"></span><span>签到</span></a>
+                </li>
+                <li>
+                    <a href="../personal/index.html"><span><img src="../../../../public/static/wx/images/icon_tabbar.png" height="25"></span><span>个人中心</span></a>
+                </li>
+            </ul>
+</div>
+
+</body>
+<script>
+    $(document).ready(function () {
+
+    });
+
+    /*content高度*/
+    function initSize() {
+        var height = $(window).height() - $("header").height() - $("#description").height() - $("#menu").height();
+        $("#content").height(height + "px");
+    }
+    
+</script>
+
+</html>

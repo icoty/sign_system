@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="Keywords" content="">
+<meta name="Description" content="">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<link rel="stylesheet" href="//at.alicdn.com/t/font_626784_0j006ef09vff.css" />
+<script src="https://cdn.staticfile.org/jquery/1.11.2/jquery.min.js"></script>
+<style type="text/css">
+*{margin:0px; padding:0px;}
+body{text-align:center; color:green;padding-top:50px;}
+a{text-decoration:none; font-size:50px;}
+</style>
+<title>调用微信扫一扫并获得结果</title>
+</head>
+<body>
+<!-- <a href="http://sao315.com/w/api/saoyisao"><i class='dzwfont dzw-saomiao' style="font-size:45px;"></i> 扫码（跳转）</a> -->
+<div id="result"></div>
+</body>
+<script type="text/javascript">
+    var qr=getQueryString("qrresult");
+    var arr_url = qr.split('?');
+    var base_url = arr_url[0];
+    var id_str = arr_url[1];
+    var id_ = id_str.split('=');
+    var id = id_[1];
+    $(function(){ 
+        $.ajax({  
+            url: base_url,
+            type: "POST",
+            data: {
+                a2s_act_id:id,
+                a2s_stu_name:"林321",
+                a2s_stu_num:"111"
+            },
+            dataType:"json",
+            error:function(XMLHttpRequest, textStatus, errorThrown){alert("errorThrown:"+errorThrown)},
+       
+            success:function(data) {
+                if (data) {
+                    var jsonobj=eval("("+data+")");
+//                     alert(jsonobj);
+                    if (jsonobj.code== 1) {
+                        alert('签到成功');
+                    }
+                    else if (jsonobj.code== -1) {
+                        alert('签到失败');
+                    }
+                    else {
+                        alert(jsonobj);
+                    }
+                }
+            }
+//            complete: function(res) {alert("complete:"+res) }
+        }); 
+    });
+//     sendPost(base_url);
+    if(qr){
+        $("#result").html(qr);
+        var wl=qr.split("CODE_128,");
+//         alert("wl[0]:"+wl[0]+",wl[1]:"+wl[1]+",wl[2]:"+wl[2]);
+        if (wl.length==2){
+            location.replace("https://www.baidu.com/s?wd=" + wl[1]);
+        }else{
+    // 		alert("您扫描的不是快递单号！所以无法为您查询物流。请对准快递单条形码进行扫描！");
+        }
+    }
+
+function getQueryString(name)
+{
+	var reg = new RegExp("\\b"+ name +"=([^&]*)");
+	var r = location.href.match(reg);
+	if (r!=null) return unescape(r[1]);
+};
+// function sendPost(url){
+//     alert("url":url);
+//     $.ajax({
+//             url: url,
+//             type: 'post',
+//             data: {
+//                 m_stu_num:1801220009
+//             },
+//             dataType:"json",
+//             success:function(data) {
+//                 if (data) {
+//                     // alert(data);
+//                     var jsonobj=eval("("+data+")");
+//                     //alert(jsonobj);
+//                     if (jsonobj.code== 1) {
+//                         alert('验证码发送成功');
+//                     }
+//                     else if (jsonobj.code== 2) {
+//                         alert('验证码发送失败');
+//                     }
+//                     else if (jsonobj.code == 3) {
+//                         alert('手机号不存在');
+//                     }
+//                     else if(jsonobj.code==4){
+//                         alert('操作过于频繁，请稍后再试');
+//                     }
+//                     else if(jsonobj.code==5){
+//                         alert('未知签名');
+//                     }
+//                     else {
+//                         alert(jsonobj);
+//                     }
+//                 }
+//             }
+//         });
+// }
+
+</script>
+</html>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>活动签到</title>
+	</head>
+	<body>
+		
+	</body>
+</html>

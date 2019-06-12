@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<meta name="viewport"
+      content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=no">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>活动签到系统</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 微软雅黑;
+        }
+        
+        table,td,th
+		{
+			border:1px solid black;
+			border-color:#336666;
+		}
+
+        td {
+			text-align:center;
+		}
+
+        header {
+            position: fixed;
+            height: 60px;
+            line-height: 60px;
+            width: 100%;
+            color: #fff;
+            font-family: "黑体";
+            font-weight: 200;
+            font-size: 20px;
+            /*背景色渐变*/
+            background: linear-gradient(to bottom right, #F56739, #FB9749);
+        }
+
+        #content {
+            position: relative;
+            top: 60px;
+            overflow:scroll;
+            margin-bottom:30%;
+            width:100%;
+            
+            /*background: linear-gradient(to bottom right, #f5f454, #fbd1b7);*/
+        }
+
+        .menu {
+            display: block;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            color: #474747;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+
+        .subMenu {
+            width: 33%;
+            float: left;
+            cursor: pointer;
+        }
+
+        .menu_name {
+            height: 30px;
+            width: 100%;
+            line-height: 30px;
+        }
+
+        img.menu_img {
+            height: 24px;
+            width: 24px;
+        }
+
+        img {
+            vertical-align: middle;
+            border: 0;
+        }
+
+        .active {
+            color: #FFA129;
+        }
+
+        .text-center {
+            text-align: center
+        }
+
+        .nav {
+            width: 100%;
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            height: 70px;
+            color: #474747;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            background-color: #fff;
+        }
+        .nav ul {
+            height: 0px;
+        }
+        .nav ul li {
+            float: left;
+            width: 33%;
+            text-align: center;
+            list-style-type: none;
+            margin: 0px;
+            padding: 0px;
+        }
+        .nav ul li span {
+            display: block;
+            color: #000;
+            font-size: 16px;
+            font-family: "微软雅黑";
+            line-height: 26px;
+        }
+        a {
+            color: #000;
+            text-decoration: none;
+        }
+        * {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            font-weight: normal;
+        }
+
+    </style>
+    <script src="../js/jquery.min.js"></script>
+</head>
+<body onload="initSize()" onresize="initSize()">
+<!--top-->
+<header class="text-center">活动签到系统</header>
+<!--content-->
+<div id="content">
+    <table width=100% id="bootstrap-data-table" class="table">
+        <thead>
+        <tr>
+            <th class="serial">序号</th>
+            <th>学号</th>
+            <th>姓名</th>
+            <th>班级</th>
+            <th>年级</th>
+            <th>手机号</th>
+         </tr>
+         </thead>
+         <tbody>
+             
+        </tbody>
+    </table>
+    
+    
+</div>
+
+<!--bottom-->
+<div class="nav">
+            <ul>
+                <li>
+                    <a href="../home/index.html"><span><img src="../../../../public/static/wx/images/icon_tabbar.png" height="25"></span><span>活动记录</span></a>
+                </li>
+                <li>
+                    <a href="http://sao315.com/w/api/saoyisao?redirect_uri=http://45.40.199.171:8080/application/wx/view/signin/get_third_party_result.html"><span><img src="../../../../public/static/wx/images/icon_tabbar.png" height="25"></span><span>签到</span></a>
+                </li>
+                <li>
+                    <a href="#"><span><img src="../../../../public/static/wx/images/icon_tabbar_active.png" height="25"></span><span>个人中心</span></a>
+                </li>
+            </ul>
+</div>
+
+</body>
+<script>
+    $(document).ready(function () {
+
+
+    });
+
+    /*content高度*/
+    function initSize() {
+        var height = $(window).height() - $("header").height() - $("#description").height() - $("#menu").height();
+        $("#content").height(height + "px");
+    }
+</script>
+
+</html>

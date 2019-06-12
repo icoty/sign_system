@@ -89,7 +89,7 @@ class AttendModel extends Model
     public function signIn($data){
         // 更新签到时间段
         $ret = Db::table("act2stu")
-            ->insert(['a2s_act_id'=>$data['a_id'],
+            ->insert(['a2s_act_id'=>$data['a2s_act_id'],
                 'a2s_stu_num'=>$data['a2s_stu_num'],
                 'a2s_stu_name'=>$data['a2s_stu_name'],
                 'a2s_sign_time'=>date('Y-m-d H:i:s', time()),
